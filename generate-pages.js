@@ -6,6 +6,18 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
+// ========================
+//     網站圖片輸出資料夾
+// ========================
+
+const webImageFolder = path.join(
+    __dirname,
+    "web-images"
+);
+
+fs.mkdirSync(webImageFolder, {
+    recursive: true
+});
 
 // ========================
 //     讀取資料檔
@@ -61,6 +73,34 @@ works.forEach(function(work) {
 
     const artist = artists[work.artist];
 
+    // ========================
+    //     建立網站用圖片
+    // ========================
+
+    const sourceImage = path.join(
+        __dirname,
+        work.image
+    );
+
+    const imageExtension =
+        path.extname(work.image).toLowerCase();
+
+    const webImageName =
+        `${work.id}${imageExtension}`;
+
+    const webImagePath = path.join(
+        webImageFolder,
+        webImageName
+    );
+
+    fs.copyFileSync(
+        sourceImage,
+        webImagePath
+    );
+
+    const webImageURL =
+        `https://s920171ryan-coder.github.io/web-images/${webImageName}`;
+
     const folderPath = path.join(
         __dirname,
         "works",
@@ -109,7 +149,7 @@ works.forEach(function(work) {
 
 <meta
     property="og:image"
-    content="https://s920171ryan-coder.github.io/${encodeURI(work.image)}"
+    content="${webImageURL}"
 >
 
 <meta name="twitter:card" content="summary_large_image">
@@ -126,7 +166,7 @@ works.forEach(function(work) {
 
 <meta
     name="twitter:image"
-    content="https://s920171ryan-coder.github.io/${encodeURI(work.image)}"
+    content="${webImageURL}"
 >
 
 <link rel="stylesheet" href="../../style.css">
