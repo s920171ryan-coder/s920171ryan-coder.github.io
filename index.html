@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白針的收藏冊</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main>
+
+        <!-- ======================== -->
+        <!-- 首頁主視覺 -->
+        <!-- ======================== -->
+
+        <section class="hero">
+
+            <!-- 自動輪播幻燈片 -->
+            <div class="slideshow">
+
+                <!-- 第一個幻燈片 -->
+                <div id="slide-image-1" class="slide">
+
+                    <!-- 放大、模糊的背景 -->
+                    <div class="slide-bg"></div>
+
+                    <!-- 清晰主圖的顯示窗口 -->
+                    <div class="slide-main">
+                        <!-- 真正的清晰作品 -->
+                        <div class="slide-main-image"></div>
+                    </div>
+
+                    <!-- 作品資訊 -->
+                    <div class="slide-info">
+                        <div class="slide-info-title"></div>
+                        <div class="slide-info-artist"></div>
+                        <div class="slide-info-date"></div>
+                    </div>
+
+                </div>
+
+                <!-- 第二個幻燈片 -->
+                <div id="slide-image-2" class="slide">
+
+                    <!-- 放大、模糊的背景 -->
+                    <div class="slide-bg"></div>
+
+                    <!-- 清晰主圖的顯示窗口 -->
+                    <div class="slide-main">
+                        <!-- 真正的清晰作品 -->
+                        <div class="slide-main-image"></div>
+                    </div>
+
+                    <!-- 作品資訊 -->
+                    <div class="slide-info">
+                        <div class="slide-info-title"></div>
+                        <div class="slide-info-artist"></div>
+                        <div class="slide-info-date"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- 網站標題 -->
+            <div class="hero-content">
+                <h1>白針的收藏冊</h1>
+            </div>
+
+        </section>
+
+        <!-- ======================== -->
+        <!-- 底部作品抽屜 -->
+        <!-- ======================== -->
+
+        <section class="work-drawer">
+
+            <!-- 資料夾分類標籤 -->
+            <div class="drawer-tabs">
+                <button class="drawer-tab active" data-filter="all">作品</button>
+                <button class="drawer-tab" data-filter="year">年份</button>
+                <button class="drawer-tab" data-filter="artist">作者</button>
+                <button class="drawer-tab" data-filter="character">角色</button>
+            </div>
+
+            <!-- 作品區 -->
+            <div class="drawer-body">
+                <div class="drawer-filter-options" id="filter-options"></div>
+                <div class="drawer-works" id="works"></div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="data/artists.js"></script>
+    <script src="data/works.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,957 @@
+/* ======================== */
+/*     整個網站的基本設定     */
+/* ======================== */
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+
+    background-color: #f5f5f5;
+    color: #333333;
+
+    /* 禁止使用者選取文字 */
+    user-select: none;
+}
+
+
+/* ======================== */
+/*     網站主要內容           */
+/* ======================== */
+
+main {
+    width: 100%;
+}
+
+
+/* ======================== */
+/*     Hero 首頁主視覺        */
+/* ======================== */
+
+.hero {
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+/* ======================== */
+/*     Hero 背景幻燈片        */
+/* ======================== */
+
+.slideshow {
+    /* 固定在瀏覽器視窗後方 */
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    z-index: 0;
+}
+
+
+/* 每一個 slide 代表一張幻燈片 */
+.slide {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    /* JavaScript 切換 opacity 時產生淡入淡出 */
+    transition: opacity 1s ease;
+}
+
+/* 第一張預設顯示 */
+#slide-image-1 {
+    opacity: 1;
+}
+
+/* 第二張預設隱藏 */
+#slide-image-2 {
+    opacity: 0;
+}
+
+
+/* ======================== */
+/*     幻燈片背景圖片         */
+/* ======================== */
+
+.slide-bg {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    /* 電腦版直接填滿整個畫面 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* ======================== */
+/*     幻燈片清晰主圖         */
+/* ======================== */
+
+.slide-main {
+    /* 電腦版不需要額外顯示清晰主圖 */
+    display: none;
+}
+
+
+/* ======================== */
+/*     背景遮罩              */
+/* ======================== */
+
+.slideshow::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    /* 位於背景圖片與前景文字之間 */
+    z-index: 1;
+
+    /* 稍微壓暗背景，讓文字比較容易閱讀 */
+    background: rgba(0, 0, 0, 0.15);
+
+    /* 不阻擋滑鼠操作 */
+    pointer-events: none;
+}
+
+
+/* ======================== */
+/*     網站標題              */
+/* ======================== */
+
+.hero-content {
+    /* 固定在瀏覽器左上角 */
+    position: fixed;
+
+    top: 25px;
+    left: 30px;
+
+    /* 位於背景和展示內容上方 */
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    text-align: left;
+    color: white;
+
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+
+    /* 禁止選取標題文字 */
+    user-select: none;
+}
+
+.hero-content h1 {
+    margin: 0;
+
+    /*
+        關鍵修正：原本這裡是「桌面版固定 50px、
+        手機版（≤700px 或直向）固定 30px」，
+        中間完全沒有過渡，只要視窗寬度剛好跨過
+        700px 這個分界，字級就會突然跳一大截；
+        而且同樣是「桌面版」，1000px 寬的視窗
+        跟 3000px 寬的視窗，字級卻是一樣的 50px，
+        不會隨視窗大小繼續縮放。
+
+        改用 clamp(最小值, 理想值, 最大值) 之後，
+        字級會照著「理想值」(6vw，隨視窗寬度即時變化)
+        連續、等比例縮放，只有縮到 28px 或放到 50px
+        時才會停止繼續變化，不會再有斷點瞬間跳動的情況。
+    */
+    font-size: clamp(1.75rem, 6vw, 3.125rem); /* 28px ~ 50px */
+}
+
+
+/* ======================== */
+/*     底部作品資料夾         */
+/* ======================== */
+
+.work-drawer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 34vh;
+
+    z-index: 10;
+
+    /* 收起時整個本體藏到畫面下方，只留下上方標籤 */
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+}
+
+
+/* ======================== */
+/*     資料夾分類標籤         */
+/* ======================== */
+
+.drawer-tabs {
+    position: absolute;
+    left: 30px;
+    bottom: 100%;
+
+    display: flex;
+    align-items: flex-end;
+}
+
+.drawer-tab {
+    height: 44px;
+    padding: 0 24px;
+
+    border: none;
+
+    background: rgba(30, 30, 30, 0.68);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+.drawer-tab:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.drawer-tab:not(:first-child) {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* ======================== */
+/*     資料夾本體             */
+/* ======================== */
+
+.drawer-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    padding: 22px 30px;
+    box-sizing: border-box;
+
+    background: rgba(30, 30, 30, 0.68);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.work-drawer:hover {
+    transform: translateY(0);
+}
+
+.work-drawer:hover .drawer-tab {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+
+/* ======================== */
+/*     作品橫向列表           */
+/* ======================== */
+
+.drawer-works {
+    display: flex;
+    gap: 18px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.drawer-works::-webkit-scrollbar {
+    display: none;
+}
+
+.drawer-works .work-card {
+    flex: 0 0 230px;
+
+    padding: 0;
+    background: none;
+
+    cursor: pointer;
+}
+
+.drawer-works .work-card img {
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.work-thumbnail {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.work-thumbnail-title {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding: 24px 12px 10px;
+
+    color: white;
+    font-size: 14px;
+
+    /* 只在圖片底部加漸層，避免白色圖片吃掉文字 */
+    background: linear-gradient(
+        transparent,
+        rgba(0, 0, 0, 0.75)
+    );
+
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+
+/* ======================== */
+/*     分類選項               */
+/* ======================== */
+
+.drawer-filter-options {
+    position: absolute;
+
+    /* 暫時覆蓋在縮圖上方 */
+    top: 8px;
+    left: 30px;
+
+    max-width: calc(100% - 60px);
+    height: 38px;
+
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    /* 太多時可以橫向捲動 */
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+
+    /* 容器本身完全透明 */
+    background: none;
+
+    /* 平常收起 */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transform: translateY(-6px);
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0s linear 0.15s;
+}
+
+.drawer-filter-options::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* 子分類展開 */
+.drawer-filter-options.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transform: translateY(0);
+
+    transition-delay: 0s;
+}
+
+
+/* 每一個年份／作者／角色 */
+.filter-option {
+    flex: 0 0 auto;
+
+    padding: 6px 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+
+    background: rgba(30, 30, 30, 0.78);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    color: white;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+/* 滑鼠停在子分類 */
+.filter-option:hover {
+    background: rgba(70, 70, 70, 0.9);
+}
+
+/* ======================== */
+/*     最新作品區域           */
+/* ======================== */
+
+.recent {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 1000px;
+
+    margin: 40px auto;
+    padding: 30px;
+
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+
+/* ======================== */
+/*     作品列表              */
+/* ======================== */
+
+.works {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+
+/* ======================== */
+/*     單張作品卡片           */
+/* ======================== */
+
+.work-card {
+    padding: 15px;
+
+    background-color: #f5f5f5;
+}
+
+.work-card img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+}
+
+.work-card h3 {
+    margin-bottom: 5px;
+}
+
+.work-card p {
+    margin-top: 0;
+
+    color: #777777;
+}
+
+
+/* ======================== */
+/*     幻燈片作品資訊         */
+/* ======================== */
+
+.slide-info {
+    position: absolute;
+    right: 30px;
+    bottom: 13px;
+    z-index: 3;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    user-select: none;
+    opacity: 1;
+    transition: opacity 1s ease;
+}
+
+/*
+    同樣的道理，以下三個文字（作品名稱／繪師／日期）
+    原本也是「桌面版一個固定值、手機版另一個固定值」，
+    改成 clamp() 讓它們隨視窗寬度連續縮放，
+    不再有斷點瞬間跳動的情況。
+*/
+
+/* 作品名稱 */
+.slide-info-title {
+    font-size: clamp(1.25rem, 4vw, 2.375rem); /* 20px ~ 38px */
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+/* 繪師 */
+.slide-info-artist {
+    margin-top: 1px;
+    font-size: clamp(1rem, 2.8vw, 1.625rem); /* 16px ~ 26px */
+    opacity: 0.8;
+}
+
+/* 日期 */
+.slide-info-date {
+    margin-top: -1px;
+    font-size: clamp(0.8125rem, 2.6vw, 1.5rem); /* 13px ~ 24px */
+    opacity: 0.8;
+}
+
+
+/* ======================== */
+/*     手機版               */
+/* ======================== */
+
+@media (max-width: 700px), (orientation: portrait) {
+
+    /* ======================== */
+    /*     手機版首頁            */
+    /* ======================== */
+
+    .hero-content {
+        top: 13px;
+        left: 15px;
+    }
+
+    /*
+        原本這裡的 .hero-content h1 { font-size: 30px; ... }
+        已經整段移除——字級現在統一由上面的 clamp() 控制，
+        會自動涵蓋手機版的尺寸，不需要在這裡再另外覆寫，
+        也不再需要 transition，因為 clamp() 本身就是連續的，
+        不會有需要「補動畫」的瞬間跳動。
+    */
+
+    .hero {
+        min-height: 100svh;
+        /* 展示模式切換時平滑縮放 */
+        transition: min-height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slideshow {
+        width: 100%;
+        height: 100svh;
+
+        /* 幻燈片平滑縮放 */
+        transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+
+    /* ======================== */
+    /*     手機版展示區           */
+    /* ======================== */
+
+    .recent {
+        width: 100%;
+        max-width: none;
+
+        margin: 0;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ======================== */
+    /*     手機版作品列表         */
+    /* ======================== */
+
+    .works {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* ======================== */
+    /*     手機版作品資訊         */
+    /* ======================== */
+
+    .slide-info {
+        right: 13px;
+        top: calc(50% + 28.125vw - 13px);
+
+        bottom: auto;
+
+        transform: translateY(-100%);
+    }
+
+    /*
+        原本這裡的 .slide-info-title / -artist / -date
+        三個 font-size 覆寫已經整段移除，
+        理由跟上面標題文字一樣：字級已經統一由
+        base 規則裡的 clamp() 控制好了。
+    */
+
+
+    /* ======================== */
+    /*     手機版模糊背景         */
+    /* ======================== */
+
+    .slide-bg {
+        /* 模糊背景允許裁切，所以使用 cover */
+        background-size: cover;
+        background-position: center;
+
+        /* 模糊背景 */
+        filter: blur(20px);
+
+        /* 稍微放大，避免 blur 後邊緣露白 */
+        transform: scale(1.1);
+    }
+
+
+    /* ======================== */
+    /*     手機版清晰主圖窗口      */
+    /* ======================== */
+
+    .slide-main {
+        /* 手機版才顯示清晰主圖 */
+        display: block;
+
+        position: absolute;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        /* 超出窗口的清晰主圖會被隱藏 */
+        overflow: hidden;
+
+        z-index: 1;
+    }
+
+
+    /* ======================== */
+    /*     手機版真正的清晰主圖    */
+    /* ======================== */
+
+    .slide-main-image {
+        position: absolute;
+
+        left: 0;
+        top: 50%;
+
+        width: 100%;
+
+        /* 主圖本身維持 16:9 */
+        aspect-ratio: 16 / 9;
+
+        /* 以圖片中心對準 top 指定的位置 */
+        transform: translateY(-50%);
+
+        /* 正常完整展示階段先以中央為基準 */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+
+    /* ======================== */
+    /*     手機版展示模式         */
+    /* ======================== */
+
+    /*
+        原本這裡的 body.gallery-mode .hero-content h1
+        { font-size: 16px; } 已經移除，
+        字級同樣統一交給 clamp() 處理。
+    */
+
+    /* 進入展示模式後，幻燈片從全螢幕平滑縮小。 */
+    body.gallery-mode .slideshow {
+        height: 40vw;
+    }
+
+    body.gallery-mode .hero {
+        min-height: 40vw;
+    }
+
+    body.gallery-mode .recent {
+        /* 展示區固定在畫面上，不再跟著整個網頁往上跑。 */
+        position: fixed;
+        /* 頂端接在 16:9 幻燈片下方。 */
+        top: 40vw;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        transform: none;
+        /* 超出剩餘畫面的作品，改由這個展示區自己捲動。 */
+        overflow-y: auto;
+        /* 手機捲動手感比較自然 */
+        -webkit-overflow-scrolling: touch;
+        /* 避免捲到底時把外面的頁面一起拉動 */
+        overscroll-behavior: contain;
+
+        z-index: 2;
+    }
+
+    body.gallery-mode .slide-main-image {
+        /* 展示模式才使用每張作品自己的上下位置。 */
+        top: var(--mobile-offset, -8.125vw);
+
+        /*
+            首頁模式原本有 translateY(-50%)，
+            展示模式改成直接用 top 控制位置。
+        */
+        transform: none;
+    }
+
+    body.gallery-mode .slide-info {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+}
+/* ======================== */
+/*     單張作品頁             */
+/* ======================== */
+
+.work-page {
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background: #111;
+}
+
+
+/* ======================== */
+/*     單張作品展示區         */
+/* ======================== */
+
+.work-viewer {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+}
+
+/* ======================== */
+/*     單張作品：模糊背景     */
+/* ======================== */
+
+.work-viewer-bg {
+    position: absolute;
+    inset: -30px;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    filter: blur(24px);
+    transform: scale(1.08);
+
+    opacity: 0.8;
+
+    z-index: 0;
+}
+
+
+/* 清晰作品 */
+.work-viewer-image {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    z-index: 1;
+}
+
+/* 作品本體 */
+.work-viewer-image {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    z-index: 2;
+}
+
+
+/* ======================== */
+/*     單張作品資訊           */
+/* ======================== */
+
+.work-viewer-info {
+    position: absolute;
+
+    top: 30px;
+    left: 30px;
+
+    z-index: 2;
+
+    text-align: left;
+    color: white;
+
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.work-viewer-info h1 {
+    margin: 0 0 8px;
+
+    font-size: 36px;
+}
+
+#work-artist {
+    font-size: 20px;
+}
+
+#work-date {
+    margin-top: 4px;
+
+    font-size: 16px;
+
+    opacity: 0.8;
+}
+
+/* ======================== */
+/*     單張作品：繪師連結     */
+/* ======================== */
+
+.work-artist-area {
+    margin-top: 4px;
+}
+
+.work-artist-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+    margin-top: 6px;
+    margin-left: 12px;
+
+    /* 平常收起 */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+
+    transform: translateY(-5px);
+
+    transition:
+        max-height 0.25s ease,
+        opacity 0.2s ease,
+        transform 0.25s ease;
+}
+
+.work-artist-area:hover .work-artist-links {
+    max-height: 160px;
+    opacity: 1;
+    pointer-events: auto;
+
+    transform: translateY(0);
+}
+
+.work-artist-links a {
+    color: rgba(255, 255, 255, 0.85);
+
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.work-artist-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ======================== */
+/*     單張作品：導覽         */
+/* ======================== */
+
+.work-navigation {
+    position: absolute;
+
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+
+    z-index: 3;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    pointer-events: none;
+}
+
+
+/* 返回 */
+.work-back {
+    color: rgba(255, 255, 255, 0.85);
+
+    font-size: 15px;
+    text-decoration: none;
+
+    pointer-events: auto;
+}
+
+.work-back:hover {
+    color: white;
+}
+
+
+/* 上一張 / 下一張 */
+.work-switch {
+    display: flex;
+    gap: 10px;
+
+    pointer-events: auto;
+}
+
+.work-switch button {
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+
+    background: rgba(20, 20, 20, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    color: white;
+    font-size: 26px;
+
+    cursor: pointer;
+}
+
+.work-switch button:hover {
+    background: rgba(60, 60, 60, 0.55);
+}
+
+.work-switch button:disabled {
+    opacity: 0.25;
+    cursor: default;
+}

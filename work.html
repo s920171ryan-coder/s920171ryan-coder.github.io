@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>作品｜白針的收藏冊</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="work-page">
+
+        <!-- ======================== -->
+        <!-- 單張作品 -->
+        <!-- ======================== -->
+
+        <section class="work-viewer">
+
+            <!-- 作品導覽 -->
+<div class="work-navigation">
+
+    <!-- 返回首頁 -->
+    <a class="work-back" href="index.html">返回</a>
+
+    <!-- 上一張 / 下一張 -->
+    <div class="work-switch">
+        <button id="work-prev" type="button">‹</button>
+        <button id="work-next" type="button">›</button>
+    </div>
+
+</div>
+
+            <!-- 作品圖片 -->
+            <div class="work-viewer-image" id="work-image"></div>
+
+            <!-- 作品資訊 -->
+            <div class="work-viewer-info">
+
+                <h1 id="work-title"></h1>
+
+                <!-- 繪師資訊 -->
+                <div class="work-artist-area">
+                    <!-- 繪師名稱 -->
+                    <div id="work-artist"></div>
+                    <!-- 繪師相關連結 -->
+                    <div class="work-artist-links" id="work-artist-links"></div>
+                </div>
+                <div id="work-date"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ======================== -->
+    <!-- 作品資料 -->
+    <!-- ======================== -->
+
+    <script src="data/artists.js"></script>
+    <script src="data/works.js"></script>
+    <script src="work.js"></script>
+
+</body>
+
+</html>

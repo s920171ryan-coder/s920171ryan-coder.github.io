@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>阿雄 更衣中｜白針的收藏冊</title>
+
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+
+    <main class="work-page">
+
+        <section class="work-viewer">
+
+            <!-- 作品導覽 -->
+            <div class="work-navigation">
+
+                <a class="work-back" href="../../index.html">返回</a>
+
+                <div class="work-switch">
+                    <button id="work-prev" type="button">‹</button>
+                    <button id="work-next" type="button">›</button>
+                </div>
+
+            </div>
+
+
+            <!-- 模糊背景 -->
+            <div class="work-viewer-bg" id="work-bg"></div>
+
+            <!-- 清晰作品 -->
+            <div
+               class="work-viewer-image"
+                id="work-image"
+            ></div>
+
+
+            <!-- 作品資訊 -->
+            <div class="work-viewer-info">
+
+                <h1 id="work-title"></h1>
+
+                <div class="work-artist-area">
+
+                    <div id="work-artist"></div>
+
+                    <div
+                        class="work-artist-links"
+                        id="work-artist-links"
+                    ></div>
+
+                </div>
+
+                <div id="work-date"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="../../data/artists.js"></script>
+    <script src="../../data/works.js"></script>
+
+    <script>
+        window.currentWorkId = "axiong-changing";
+    </script>
+
+    <script src="../../work.js"></script>
+
+</body>
+
+</html>
