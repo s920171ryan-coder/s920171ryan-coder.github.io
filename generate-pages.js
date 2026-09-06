@@ -81,7 +81,55 @@ works.forEach(function(work) {
 
     <title>${escapeHTML(work.title)}｜白針的收藏冊</title>
 
-    <link rel="stylesheet" href="../../style.css">
+<!-- ======================== -->
+<!-- 分享預覽                  -->
+<!-- ======================== -->
+
+<meta
+    name="description"
+    content="${escapeHTML(work.title)}｜${escapeHTML(artist.name)} 様｜白針的收藏冊"
+>
+
+<meta property="og:type" content="website">
+
+<meta
+    property="og:title"
+    content="${escapeHTML(work.title)}｜白針的收藏冊"
+>
+
+<meta
+    property="og:description"
+    content="${escapeHTML(artist.name)} 様｜${escapeHTML(work.date.replaceAll("-", " / "))}"
+>
+
+<meta
+    property="og:url"
+    content="https://s920171ryan-coder.github.io/works/${escapeHTML(work.id)}/"
+>
+
+<meta
+    property="og:image"
+    content="https://s920171ryan-coder.github.io/${encodeURI(work.image)}"
+>
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta
+    name="twitter:title"
+    content="${escapeHTML(work.title)}｜白針的收藏冊"
+>
+
+<meta
+    name="twitter:description"
+    content="${escapeHTML(artist.name)} 様｜${escapeHTML(work.date.replaceAll("-", " / "))}"
+>
+
+<meta
+    name="twitter:image"
+    content="https://s920171ryan-coder.github.io/${encodeURI(work.image)}"
+>
+
+<link rel="stylesheet" href="../../style.css">
 </head>
 
 <body>
