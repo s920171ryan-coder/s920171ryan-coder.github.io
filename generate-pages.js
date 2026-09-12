@@ -6,26 +6,39 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
+
 // ========================
-//     網站圖片輸出資料夾
+//     基本設定
 // ========================
+
+const siteURL =
+    "https://s920171ryan-coder.github.io";
+
+const worksOutputFolder = path.join(
+    __dirname,
+    "works"
+);
 
 const webImageFolder = path.join(
     __dirname,
     "web-images"
 );
 
-fs.mkdirSync(webImageFolder, {
-    recursive: true
-});
 
 // ========================
 //     讀取資料檔
 // ========================
 
-function loadData(filePath, variableName) {
+function loadData(
+    filePath,
+    variableName
+) {
 
-    const code = fs.readFileSync(filePath, "utf8");
+    const code =
+        fs.readFileSync(
+            filePath,
+            "utf8"
+        );
 
     const context = {};
 
@@ -41,14 +54,37 @@ function loadData(filePath, variableName) {
 
 
 const works = loadData(
-    path.join(__dirname, "data", "works.js"),
+    path.join(
+        __dirname,
+        "data",
+        "works.js"
+    ),
     "works"
 );
 
 const artists = loadData(
-    path.join(__dirname, "data", "artists.js"),
+    path.join(
+        __dirname,
+        "data",
+        "artists.js"
+    ),
     "artists"
 );
+
+
+// ========================
+//     公開作品
+// ========================
+
+// 只產生允許公開的作品
+// 並依完稿日期由新到舊排列
+const publicWorks = works
+    .filter(function(work) {
+        return work.published === true;
+    })
+    .sort(function(a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
 
 
 // ========================
@@ -66,110 +102,275 @@ function escapeHTML(text) {
 
 
 // ========================
-//     建立每件作品頁
+//     作品顯示名稱
 // ========================
 
-works.forEach(function(work) {
+function getWorkDisplayTitle(work) {
 
-    const artist = artists[work.artist];
+    return `${work.character} ${work.title}`.trim();
+}
 
-    // ========================
-    //     建立網站用圖片
-    // ========================
 
-    const sourceImage = path.join(
-        __dirname,
-        work.image
+// ========================
+//     日期顯示格式
+// ========================
+
+function getDisplayDate(work) {
+
+    return work.date.replaceAll(
+        "-",
+        " / "
     );
+}
 
-    const imageExtension =
-        path.extname(work.image).toLowerCase();
 
-    const webImageName =
-        `${work.id}${imageExtension}`;
+// ========================
+//     清理舊輸出
+// ========================
 
-    const webImagePath = path.join(
+// 每次重新產生前，先刪除舊作品頁
+if (
+    fs.existsSync(
+        worksOutputFolder
+    )
+) {
+
+    fs.rmSync(
+        worksOutputFolder,
+        {
+            recursive: true,
+            force: true
+        }
+    );
+}
+
+
+// 每次重新產生前，先刪除舊分享圖片
+if (
+    fs.existsSync(
+        webImageFolder
+    )
+) {
+
+    fs.rmSync(
         webImageFolder,
-        webImageName
+        {
+            recursive: true,
+            force: true
+        }
     );
+}
 
-    fs.copyFileSync(
-        sourceImage,
-        webImagePath
-    );
 
-    const webImageURL =
-        `https://s920171ryan-coder.github.io/web-images/${webImageName}`;
+// ========================
+//     建立乾淨輸出資料夾
+// ========================
 
-    const folderPath = path.join(
-        __dirname,
-        "works",
-        work.id
-    );
-
-    fs.mkdirSync(folderPath, {
+fs.mkdirSync(
+    worksOutputFolder,
+    {
         recursive: true
-    });
+    }
+);
+
+fs.mkdirSync(
+    webImageFolder,
+    {
+        recursive: true
+    }
+);
 
 
-    const html = `<!DOCTYPE html>
+// ========================
+//     建立每件公開作品
+// ========================
+
+publicWorks.forEach(
+    function(work) {
+
+        const artist =
+            artists[work.artist];
+
+        const displayTitle =
+            getWorkDisplayTitle(work);
+
+        const displayDate =
+            getDisplayDate(work);
+
+
+        // ========================
+        //     建立網站用圖片
+        // ========================
+
+        const sourceImage = path.join(
+            __dirname,
+            work.image
+        );
+
+        const imageExtension =
+            path.extname(
+                work.image
+            ).toLowerCase();
+
+        const webImageName =
+            `${work.id}${imageExtension}`;
+
+        const webImagePath = path.join(
+            webImageFolder,
+            webImageName
+        );
+
+
+        // 複製成乾淨英文檔名
+        fs.copyFileSync(
+            sourceImage,
+            webImagePath
+        );
+
+
+        // 公開圖片網址
+        const webImageURL =
+            `${siteURL}/web-images/${webImageName}`;
+
+
+        // ========================
+        //     作品網址
+        // ========================
+
+        const workURL =
+            `${siteURL}/works/${work.id}/`;
+
+
+        // ========================
+        //     建立作品資料夾
+        // ========================
+
+        const folderPath = path.join(
+            worksOutputFolder,
+            work.id
+        );
+
+        fs.mkdirSync(
+            folderPath,
+            {
+                recursive: true
+            }
+        );
+
+
+        // ========================
+        //     建立作品 HTML
+        // ========================
+
+        const html = `<!DOCTYPE html>
 <html>
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>${escapeHTML(work.title)}｜白針的收藏冊</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<!-- ======================== -->
-<!-- 分享預覽                  -->
-<!-- ======================== -->
+    <title>${escapeHTML(displayTitle)}｜白針的收藏冊</title>
 
-<meta
-    name="description"
-    content="${escapeHTML(work.title)}｜${escapeHTML(artist.name)} 様｜白針的收藏冊"
->
 
-<meta property="og:type" content="website">
+    <!-- ======================== -->
+    <!--     基本資訊              -->
+    <!-- ======================== -->
 
-<meta
-    property="og:title"
-    content="${escapeHTML(work.title)}｜白針的收藏冊"
->
+    <meta
+        name="description"
+        content="${escapeHTML(displayTitle)}｜${escapeHTML(artist.name)} 様｜白針的收藏冊"
+    >
 
-<meta
-    property="og:description"
-    content="${escapeHTML(artist.name)} 様｜${escapeHTML(work.date.replaceAll("-", " / "))}"
->
+    <link
+        rel="canonical"
+        href="${escapeHTML(workURL)}"
+    >
 
-<meta
-    property="og:url"
-    content="https://s920171ryan-coder.github.io/works/${escapeHTML(work.id)}/"
->
 
-<meta
-    property="og:image"
-    content="${webImageURL}"
->
+    <!-- ======================== -->
+    <!--     Open Graph           -->
+    <!-- ======================== -->
 
-<meta name="twitter:card" content="summary_large_image">
+    <meta
+        property="og:type"
+        content="website"
+    >
 
-<meta
-    name="twitter:title"
-    content="${escapeHTML(work.title)}｜白針的收藏冊"
->
+    <meta
+        property="og:site_name"
+        content="白針的收藏冊"
+    >
 
-<meta
-    name="twitter:description"
-    content="${escapeHTML(artist.name)} 様｜${escapeHTML(work.date.replaceAll("-", " / "))}"
->
+    <meta
+        property="og:title"
+        content="${escapeHTML(displayTitle)}｜白針的收藏冊"
+    >
 
-<meta
-    name="twitter:image"
-    content="${webImageURL}"
->
+    <meta
+        property="og:description"
+        content="${escapeHTML(artist.name)} 様｜${escapeHTML(displayDate)}"
+    >
 
-<link rel="stylesheet" href="../../style.css">
+    <meta
+        property="og:url"
+        content="${escapeHTML(workURL)}"
+    >
+
+    <meta
+        property="og:image"
+        content="${escapeHTML(webImageURL)}"
+    >
+
+    <meta
+        property="og:image:alt"
+        content="${escapeHTML(displayTitle)}"
+    >
+
+
+    <!-- ======================== -->
+    <!--     X / Twitter Card     -->
+    <!-- ======================== -->
+
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
+
+    <meta
+        name="twitter:title"
+        content="${escapeHTML(displayTitle)}｜白針的收藏冊"
+    >
+
+    <meta
+        name="twitter:description"
+        content="${escapeHTML(artist.name)} 様｜${escapeHTML(displayDate)}"
+    >
+
+    <meta
+        name="twitter:image"
+        content="${escapeHTML(webImageURL)}"
+    >
+
+    <meta
+        name="twitter:image:alt"
+        content="${escapeHTML(displayTitle)}"
+    >
+
+
+    <!-- ======================== -->
+    <!--     樣式表               -->
+    <!-- ======================== -->
+
+    <link
+        rel="stylesheet"
+        href="../../style.css"
+    >
+
 </head>
 
 <body>
@@ -178,30 +379,65 @@ works.forEach(function(work) {
 
         <section class="work-viewer">
 
-            <!-- 作品導覽 -->
+
+            <!-- ======================== -->
+            <!--     作品導覽              -->
+            <!-- ======================== -->
+
             <div class="work-navigation">
 
-                <a class="work-back" href="../../index.html">返回</a>
+                <a
+                    class="work-back"
+                    href="../../index.html"
+                >
+                    返回
+                </a>
 
                 <div class="work-switch">
-                    <button id="work-prev" type="button">‹</button>
-                    <button id="work-next" type="button">›</button>
+
+                    <button
+                        id="work-prev"
+                        type="button"
+                    >
+                        ‹
+                    </button>
+
+                    <button
+                        id="work-next"
+                        type="button"
+                    >
+                        ›
+                    </button>
+
                 </div>
 
             </div>
 
 
-            <!-- 模糊背景 -->
-            <div class="work-viewer-bg" id="work-bg"></div>
+            <!-- ======================== -->
+            <!--     模糊背景              -->
+            <!-- ======================== -->
 
-            <!-- 清晰作品 -->
             <div
-               class="work-viewer-image"
+                class="work-viewer-bg"
+                id="work-bg"
+            ></div>
+
+
+            <!-- ======================== -->
+            <!--     清晰作品              -->
+            <!-- ======================== -->
+
+            <div
+                class="work-viewer-image"
                 id="work-image"
             ></div>
 
 
-            <!-- 作品資訊 -->
+            <!-- ======================== -->
+            <!--     作品資訊              -->
+            <!-- ======================== -->
+
             <div class="work-viewer-info">
 
                 <h1 id="work-title"></h1>
@@ -226,12 +462,26 @@ works.forEach(function(work) {
     </main>
 
 
+    <!-- ======================== -->
+    <!--     資料                  -->
+    <!-- ======================== -->
+
     <script src="../../data/artists.js"></script>
     <script src="../../data/works.js"></script>
+
+
+    <!-- ======================== -->
+    <!--     目前作品 ID           -->
+    <!-- ======================== -->
 
     <script>
         window.currentWorkId = "${escapeHTML(work.id)}";
     </script>
+
+
+    <!-- ======================== -->
+    <!--     作品頁功能            -->
+    <!-- ======================== -->
 
     <script src="../../work.js"></script>
 
@@ -239,15 +489,34 @@ works.forEach(function(work) {
 
 </html>`;
 
-    fs.writeFileSync(
-        path.join(folderPath, "index.html"),
-        html,
-        "utf8"
-    );
 
-    console.log("建立：", work.id);
-});
+        // ========================
+        //     寫入 index.html
+        // ========================
 
+        fs.writeFileSync(
+            path.join(
+                folderPath,
+                "index.html"
+            ),
+            html,
+            "utf8"
+        );
+
+
+        console.log(
+            "建立：",
+            displayTitle
+        );
+    }
+);
+
+
+// ========================
+//     完成訊息
+// ========================
 
 console.log("");
-console.log("作品頁產生完成！");
+console.log(
+    `作品頁產生完成！共 ${publicWorks.length} 件公開作品。`
+);

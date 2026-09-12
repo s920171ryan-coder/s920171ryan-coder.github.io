@@ -122,7 +122,13 @@ main {
     pointer-events: none;
 }
 
+/* ======================== */
+/*     首頁作品可點擊        */
+/* ======================== */
 
+.slide {
+    cursor: pointer;
+}
 /* ======================== */
 /*     網站標題              */
 /* ======================== */
@@ -148,6 +154,7 @@ main {
 
     /* 禁止選取標題文字 */
     user-select: none;
+    pointer-events: none;
 }
 
 .hero-content h1 {
@@ -176,18 +183,47 @@ main {
 /* ======================== */
 
 .work-drawer {
+    /* 預設：作品＝淡紅色 */
+    --drawer-color: 255, 170, 170;
+
     position: fixed;
     left: 0;
     bottom: 0;
 
     width: 100%;
-    height: 34vh;
+    height: calc(
+    clamp(210px, 13vw, 320px) * 9 / 16
+    + 44px
+);
 
     z-index: 10;
 
-    /* 收起時整個本體藏到畫面下方，只留下上方標籤 */
+    /* 收起時本體藏到畫面下方，只留下資料夾耳朵 */
     transform: translateY(100%);
-    transition: transform 0.4s ease;
+
+    transition:
+        transform 0.4s ease;
+}
+
+
+/* ======================== */
+/*     抽屜分類顏色          */
+/* ======================== */
+
+.work-drawer[data-drawer="all"] {
+    --drawer-color: 255, 170, 170;
+}
+
+.work-drawer[data-drawer="year"] {
+    --drawer-color: 255, 225, 145;
+}
+
+.work-drawer[data-drawer="artist"] {
+    --drawer-color: 165, 215, 255;
+}
+
+.work-drawer[data-drawer="character"] {
+    --drawer-color: 170, 235, 195;
 }
 
 
@@ -197,60 +233,114 @@ main {
 
 .drawer-tabs {
     position: absolute;
+
     left: 30px;
     bottom: 100%;
 
     display: flex;
     align-items: flex-end;
+
+    gap: 2px;
 }
 
+
+/* ======================== */
+/*     資料夾耳朵            */
+/* ======================== */
+
 .drawer-tab {
+    position: relative;
+
     height: 44px;
-    padding: 0 24px;
+    padding: 0 28px;
 
     border: none;
+    border-radius: 0;
 
-    background: rgba(30, 30, 30, 0.68);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    clip-path: polygon(
+        0 100%,
+        12px 0,
+        calc(100% - 8px) 0,
+        100% 100%
+    );
 
-    color: rgba(255, 255, 255, 0.88);
+    color: rgba(35, 35, 35, 0.78);
     font-size: 15px;
 
     cursor: pointer;
 }
 
-.drawer-tab:first-child {
-    border-radius: 12px 12px 0 0;
+
+/* 作品：淡紅 */
+.drawer-tab[data-filter="all"] {
+    background: rgba(255, 170, 170, 0.72);
 }
 
+
+/* 年份：淡黃 */
+.drawer-tab[data-filter="year"] {
+    background: rgba(255, 225, 145, 0.72);
+}
+
+
+/* 作者：淡藍 */
+.drawer-tab[data-filter="artist"] {
+    background: rgba(165, 215, 255, 0.72);
+}
+
+
+/* 角色：淡綠 */
+.drawer-tab[data-filter="character"] {
+    background: rgba(170, 235, 195, 0.72);
+}
+
+
+/* ======================== */
+/*     選中的資料夾耳朵      */
+/* ======================== */
+
+.drawer-tab.active {
+    background: rgba(
+        var(--drawer-color),
+        0.72
+    );
+
+    filter:
+        brightness(1.04)
+        saturate(1.04);
+
+    z-index: 2;
+}
+
+
+/* 滑鼠經過 */
+.drawer-tab:hover {
+    filter: brightness(1.05);
+}
+
+
+/* active + hover */
+.drawer-tab.active:hover {
+    filter:
+        brightness(1.07)
+        saturate(1.04);
+}
+
+
+/* ======================== */
+/*     抽屜收起狀態          */
+/* ======================== */
+
+/* 收起時只留下「作品」 */
 .drawer-tab:not(:first-child) {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(8px);
-
-    transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
 }
 
 
 /* ======================== */
-/*     資料夾本體             */
+/*     抽屜展開狀態          */
 /* ======================== */
-
-.drawer-body {
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-    padding: 22px 30px;
-    box-sizing: border-box;
-
-    background: rgba(30, 30, 30, 0.68);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
 
 .work-drawer:hover {
     transform: translateY(0);
@@ -259,20 +349,54 @@ main {
 .work-drawer:hover .drawer-tab {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(0);
 }
 
 
 /* ======================== */
-/*     作品橫向列表           */
+/*     資料夾本體            */
+/* ======================== */
+
+.drawer-body {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    /*
+        稍微往上吃掉 1px，
+        避免耳朵與抽屜之間出現亮色縫隙。
+    */
+    margin-top: -1px;
+
+    padding: 22px 30px;
+
+    box-sizing: border-box;
+
+    background: rgba(
+        var(--drawer-color),
+        0.52
+    );
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    transition:
+        background 0.3s ease;
+}
+
+
+/* ======================== */
+/*     作品橫向列表          */
 /* ======================== */
 
 .drawer-works {
     display: flex;
+
     gap: 18px;
 
     overflow-x: auto;
     overflow-y: hidden;
+
     scrollbar-width: none;
 }
 
@@ -280,30 +404,52 @@ main {
     display: none;
 }
 
+
+/* ======================== */
+/*     作品卡片              */
+/* ======================== */
+
 .drawer-works .work-card {
-    flex: 0 0 230px;
+    flex: 0 0 clamp(210px, 13vw, 320px);
 
     padding: 0;
+
     background: none;
 
     cursor: pointer;
 }
 
+
+/* 作品圖片 */
 .drawer-works .work-card img {
     display: block;
 
     width: 100%;
+
     aspect-ratio: 16 / 9;
 
     object-fit: cover;
+
     border-radius: 12px;
 }
 
+
+/* ======================== */
+/*     作品縮圖              */
+/* ======================== */
+
 .work-thumbnail {
     position: relative;
+
     overflow: hidden;
+
     border-radius: 12px;
 }
+
+
+/* ======================== */
+/*     作品縮圖標題          */
+/* ======================== */
 
 .work-thumbnail-title {
     position: absolute;
@@ -312,29 +458,33 @@ main {
     right: 0;
     bottom: 0;
 
-    padding: 24px 12px 10px;
+    padding:
+        24px
+        12px
+        10px;
 
     color: white;
     font-size: 14px;
 
-    /* 只在圖片底部加漸層，避免白色圖片吃掉文字 */
-    background: linear-gradient(
-        transparent,
-        rgba(0, 0, 0, 0.75)
-    );
+    /* 圖片底部漸層，避免亮色圖片吃掉文字 */
+    background:
+        linear-gradient(
+            transparent,
+            rgba(0, 0, 0, 0.75)
+        );
 
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    text-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 
 /* ======================== */
-/*     分類選項               */
+/*     分類選項列            */
 /* ======================== */
 
 .drawer-filter-options {
     position: absolute;
 
-    /* 暫時覆蓋在縮圖上方 */
     top: 8px;
     left: 30px;
 
@@ -345,14 +495,15 @@ main {
 
     display: flex;
     align-items: center;
+
     gap: 8px;
 
-    /* 太多時可以橫向捲動 */
     overflow-x: auto;
     overflow-y: hidden;
+
     scrollbar-width: none;
 
-    /* 容器本身完全透明 */
+    /* 容器本身透明 */
     background: none;
 
     /* 平常收起 */
@@ -373,7 +524,10 @@ main {
 }
 
 
-/* 子分類展開 */
+/* ======================== */
+/*     子分類展開            */
+/* ======================== */
+
 .drawer-filter-options.show {
     opacity: 1;
     visibility: visible;
@@ -385,16 +539,23 @@ main {
 }
 
 
-/* 每一個年份／作者／角色 */
+/* ======================== */
+/*     子分類按鈕            */
+/* ======================== */
+
 .filter-option {
     flex: 0 0 auto;
 
     padding: 6px 14px;
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+
     border-radius: 7px;
 
-    background: rgba(30, 30, 30, 0.78);
+    background:
+        rgba(30, 30, 30, 0.78);
 
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -408,7 +569,8 @@ main {
 
 /* 滑鼠停在子分類 */
 .filter-option:hover {
-    background: rgba(70, 70, 70, 0.9);
+    background:
+        rgba(70, 70, 70, 0.9);
 }
 
 /* ======================== */
@@ -745,6 +907,36 @@ h2 {
     height: 100%;
 
     overflow: hidden;
+
+    /*
+        中央 16:9 圖片實際顯示範圍
+
+        寬螢幕：高度撐滿，左右留背景
+        高螢幕：寬度撐滿，上下留背景
+    */
+    --image-width:
+        min(
+            100vw,
+            calc(100vh * 16 / 9)
+        );
+
+    --image-height:
+        min(
+            100vh,
+            calc(100vw * 9 / 16)
+        );
+
+    --image-left:
+        calc(
+            (100vw - var(--image-width)) / 2
+        );
+
+    --image-top:
+        calc(
+            (100vh - var(--image-height)) / 2
+        );
+
+    --image-padding: 28px;
 }
 
 /* ======================== */
@@ -806,15 +998,31 @@ h2 {
 .work-viewer-info {
     position: absolute;
 
-    top: 30px;
-    left: 30px;
+    top:
+        calc(
+            var(--image-top)
+            + var(--image-padding)
+        );
 
-    z-index: 2;
+    left:
+        calc(
+            var(--image-left)
+            + var(--image-padding)
+        );
+
+    z-index: 3;
 
     text-align: left;
     color: white;
 
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    /*
+        比原本更強的陰影，
+        避免碰到白色、淺色作品時看不清楚。
+    */
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.95),
+        0 0 8px rgba(0, 0, 0, 0.75),
+        0 0 16px rgba(0, 0, 0, 0.45);
 }
 
 .work-viewer-info h1 {
@@ -893,9 +1101,23 @@ h2 {
 .work-navigation {
     position: absolute;
 
-    left: 30px;
-    right: 30px;
-    bottom: 30px;
+    left:
+        calc(
+            var(--image-left)
+            + var(--image-padding)
+        );
+
+    right:
+        calc(
+            var(--image-left)
+            + var(--image-padding)
+        );
+
+    bottom:
+        calc(
+            var(--image-top)
+            + var(--image-padding)
+        );
 
     z-index: 3;
 
@@ -909,10 +1131,16 @@ h2 {
 
 /* 返回 */
 .work-back {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.95);
 
     font-size: 15px;
+    font-weight: 500;
+
     text-decoration: none;
+
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.95),
+        0 0 8px rgba(0, 0, 0, 0.7);
 
     pointer-events: auto;
 }
