@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@300;400;700&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+
 /* ======================== */
 /*     整個網站的基本設定     */
 /* ======================== */
@@ -183,8 +185,8 @@ main {
 /* ======================== */
 
 .work-drawer {
-    /* 預設：作品＝淡紅色 */
-    --drawer-color: 255, 170, 170;
+    /* 預設：作品＝薄荷綠 */
+    --drawer-color: 215, 235, 227;
 
     position: fixed;
     left: 0;
@@ -211,19 +213,19 @@ main {
 /* ======================== */
 
 .work-drawer[data-drawer="all"] {
-    --drawer-color: 255, 170, 170;
+    --drawer-color: 215, 235, 227;
 }
 
 .work-drawer[data-drawer="year"] {
-    --drawer-color: 255, 225, 145;
+    --drawer-color: 217, 229, 255;
 }
 
 .work-drawer[data-drawer="artist"] {
-    --drawer-color: 165, 215, 255;
+    --drawer-color: 246, 215, 220;
 }
 
 .work-drawer[data-drawer="character"] {
-    --drawer-color: 170, 235, 195;
+    --drawer-color: 239, 226, 204;
 }
 
 
@@ -233,97 +235,96 @@ main {
 
 .drawer-tabs {
     position: absolute;
-
     left: 30px;
-    bottom: 100%;
+    bottom: calc(100% - 8px);
 
     display: flex;
     align-items: flex-end;
-
-    gap: 2px;
+    gap: 4px;
 }
 
 
-/* ======================== */
-/*     資料夾耳朵            */
-/* ======================== */
-
+/*
+    6 號「極簡線條」：
+    外型與底色交給 SVG，文字仍由 HTML 顯示，
+    所以 ZH / JP / EN 都能正常切換。
+*/
 .drawer-tab {
     position: relative;
 
-    height: 44px;
-    padding: 0 28px;
+    width: clamp(150px, 13vw, 210px);
+    height: clamp(52px, 4.5vw, 66px);
 
-    border: none;
+    padding: 0 24px 0 62px;
+
+    border: 0;
     border-radius: 0;
 
-    clip-path: polygon(
-        0 100%,
-        12px 0,
-        calc(100% - 8px) 0,
-        100% 100%
-    );
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
 
-    color: rgba(35, 35, 35, 0.78);
-    font-size: 15px;
+    color: rgba(35, 35, 35, 0.80);
+    font-size: clamp(14px, 1vw, 17px);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+
+    text-align: center;
 
     cursor: pointer;
+
+    transform: none;
+    transition: filter 0.18s ease;
+
+    /* 分類名稱永遠保持單行 */
+    white-space: nowrap;
+    word-break: keep-all;
+    line-height: 1;
 }
 
 
-/* 作品：淡紅 */
+/* 四種標籤素材 */
 .drawer-tab[data-filter="all"] {
-    background: rgba(255, 170, 170, 0.72);
+    background-image: url("images/ui/tab-works.svg");
 }
 
-
-/* 年份：淡黃 */
 .drawer-tab[data-filter="year"] {
-    background: rgba(255, 225, 145, 0.72);
+    background-image: url("images/ui/tab-year.svg");
 }
 
-
-/* 作者：淡藍 */
 .drawer-tab[data-filter="artist"] {
-    background: rgba(165, 215, 255, 0.72);
+    background-image: url("images/ui/tab-artist.svg");
 }
 
-
-/* 角色：淡綠 */
 .drawer-tab[data-filter="character"] {
-    background: rgba(170, 235, 195, 0.72);
+    background-image: url("images/ui/tab-character.svg");
 }
 
 
-/* ======================== */
-/*     選中的資料夾耳朵      */
-/* ======================== */
+/* 滑鼠移上去：只提亮，不改變位置 */
+.drawer-tab:hover {
+    transform: none;
+    filter:
+        brightness(1.035)
+        drop-shadow(0 4px 6px rgba(0, 0, 0, 0.14));
+}
 
+
+/* 選中：只加強清晰度，不改變位置 */
 .drawer-tab.active {
-    background: rgba(
-        var(--drawer-color),
-        0.72
-    );
-
+    transform: none;
     filter:
         brightness(1.04)
-        saturate(1.04);
-
-    z-index: 2;
+        saturate(1.06)
+        drop-shadow(0 4px 6px rgba(0, 0, 0, 0.17));
 }
 
 
-/* 滑鼠經過 */
-.drawer-tab:hover {
-    filter: brightness(1.05);
-}
-
-
-/* active + hover */
-.drawer-tab.active:hover {
-    filter:
-        brightness(1.07)
-        saturate(1.04);
+/* 鍵盤操作時保留可見焦點 */
+.drawer-tab:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.88);
+    outline-offset: 2px;
 }
 
 
@@ -479,39 +480,39 @@ main {
 
 
 /* ======================== */
-/*     分類選項列            */
+/*     子分類選項列          */
 /* ======================== */
 
 .drawer-filter-options {
     position: absolute;
 
+    /*
+        子標籤放在抽屜內側頂端。
+        水平中心由 JS 的 --filter-center
+        對準目前主標籤中心。
+    */
     top: 8px;
-    left: 30px;
-
-    max-width: calc(100% - 60px);
-    height: 38px;
+    left: var(--filter-center, 50%);
 
     z-index: 20;
 
-    display: flex;
-    align-items: center;
+    width: min(420px, calc(100% - 60px));
+    height: 38px;
 
-    gap: 8px;
+    box-sizing: border-box;
 
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
 
-    scrollbar-width: none;
-
-    /* 容器本身透明 */
     background: none;
 
-    /* 平常收起 */
+    /* 平常隱藏 */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
 
-    transform: translateY(-6px);
+    transform:
+        translateX(-50%)
+        translateY(-6px);
 
     transition:
         opacity 0.15s ease,
@@ -519,28 +520,102 @@ main {
         visibility 0s linear 0.15s;
 }
 
-.drawer-filter-options::-webkit-scrollbar {
-    display: none;
-}
 
-
-/* ======================== */
-/*     子分類展開            */
-/* ======================== */
-
+/* 顯示子標籤 */
 .drawer-filter-options.show {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
 
-    transform: translateY(0);
+    transform:
+        translateX(-50%)
+        translateY(0);
 
     transition-delay: 0s;
 }
 
 
 /* ======================== */
-/*     子分類按鈕            */
+/*     子標籤捲動軌道        */
+/* ======================== */
+
+.filter-track {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+    height: 100%;
+
+    box-sizing: border-box;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+
+    /*
+        左右保留空間，
+        讓最外側選項進入淡出區。
+    */
+    padding: 0 44px;
+
+    /*
+        超過 3 個時：
+        左右逐漸透明，
+        中央維持清楚。
+    */
+    -webkit-mask-image:
+        linear-gradient(
+            to right,
+            transparent 0%,
+            black 14%,
+            black 86%,
+            transparent 100%
+        );
+
+    mask-image:
+        linear-gradient(
+            to right,
+            transparent 0%,
+            black 14%,
+            black 86%,
+            transparent 100%
+        );
+}
+
+
+.filter-track::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* ======================== */
+/*     3 個以下             */
+/* ======================== */
+
+.drawer-filter-options.is-short {
+    width: max-content;
+    max-width: calc(100% - 60px);
+}
+
+
+.drawer-filter-options.is-short
+.filter-track {
+    justify-content: center;
+
+    padding: 0;
+
+    overflow: hidden;
+
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+
+/* ======================== */
+/*     子標籤按鈕            */
 /* ======================== */
 
 .filter-option {
@@ -563,15 +638,24 @@ main {
     color: white;
     font-size: 14px;
 
+    white-space: nowrap;
+
     cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
 }
 
 
-/* 滑鼠停在子分類 */
 .filter-option:hover {
     background:
         rgba(70, 70, 70, 0.9);
+
+    transform:
+        translateY(-1px);
 }
+
 
 /* ======================== */
 /*     最新作品區域           */
@@ -683,206 +767,6 @@ h2 {
 
 
 /* ======================== */
-/*     手機版               */
-/* ======================== */
-
-@media (max-width: 700px), (orientation: portrait) {
-
-    /* ======================== */
-    /*     手機版首頁            */
-    /* ======================== */
-
-    .hero-content {
-        top: 13px;
-        left: 15px;
-    }
-
-    /*
-        原本這裡的 .hero-content h1 { font-size: 30px; ... }
-        已經整段移除——字級現在統一由上面的 clamp() 控制，
-        會自動涵蓋手機版的尺寸，不需要在這裡再另外覆寫，
-        也不再需要 transition，因為 clamp() 本身就是連續的，
-        不會有需要「補動畫」的瞬間跳動。
-    */
-
-    .hero {
-        min-height: 100svh;
-        /* 展示模式切換時平滑縮放 */
-        transition: min-height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .slideshow {
-        width: 100%;
-        height: 100svh;
-
-        /* 幻燈片平滑縮放 */
-        transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-
-    /* ======================== */
-    /*     手機版展示區           */
-    /* ======================== */
-
-    .recent {
-        width: 100%;
-        max-width: none;
-
-        margin: 0;
-
-        box-sizing: border-box;
-    }
-
-
-    /* ======================== */
-    /*     手機版作品列表         */
-    /* ======================== */
-
-    .works {
-        grid-template-columns: 1fr;
-    }
-
-
-    /* ======================== */
-    /*     手機版作品資訊         */
-    /* ======================== */
-
-    .slide-info {
-        right: 13px;
-        top: calc(50% + 28.125vw - 13px);
-
-        bottom: auto;
-
-        transform: translateY(-100%);
-    }
-
-    /*
-        原本這裡的 .slide-info-title / -artist / -date
-        三個 font-size 覆寫已經整段移除，
-        理由跟上面標題文字一樣：字級已經統一由
-        base 規則裡的 clamp() 控制好了。
-    */
-
-
-    /* ======================== */
-    /*     手機版模糊背景         */
-    /* ======================== */
-
-    .slide-bg {
-        /* 模糊背景允許裁切，所以使用 cover */
-        background-size: cover;
-        background-position: center;
-
-        /* 模糊背景 */
-        filter: blur(20px);
-
-        /* 稍微放大，避免 blur 後邊緣露白 */
-        transform: scale(1.1);
-    }
-
-
-    /* ======================== */
-    /*     手機版清晰主圖窗口      */
-    /* ======================== */
-
-    .slide-main {
-        /* 手機版才顯示清晰主圖 */
-        display: block;
-
-        position: absolute;
-        inset: 0;
-
-        width: 100%;
-        height: 100%;
-
-        /* 超出窗口的清晰主圖會被隱藏 */
-        overflow: hidden;
-
-        z-index: 1;
-    }
-
-
-    /* ======================== */
-    /*     手機版真正的清晰主圖    */
-    /* ======================== */
-
-    .slide-main-image {
-        position: absolute;
-
-        left: 0;
-        top: 50%;
-
-        width: 100%;
-
-        /* 主圖本身維持 16:9 */
-        aspect-ratio: 16 / 9;
-
-        /* 以圖片中心對準 top 指定的位置 */
-        transform: translateY(-50%);
-
-        /* 正常完整展示階段先以中央為基準 */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-
-    /* ======================== */
-    /*     手機版展示模式         */
-    /* ======================== */
-
-    /*
-        原本這裡的 body.gallery-mode .hero-content h1
-        { font-size: 16px; } 已經移除，
-        字級同樣統一交給 clamp() 處理。
-    */
-
-    /* 進入展示模式後，幻燈片從全螢幕平滑縮小。 */
-    body.gallery-mode .slideshow {
-        height: 40vw;
-    }
-
-    body.gallery-mode .hero {
-        min-height: 40vw;
-    }
-
-    body.gallery-mode .recent {
-        /* 展示區固定在畫面上，不再跟著整個網頁往上跑。 */
-        position: fixed;
-        /* 頂端接在 16:9 幻燈片下方。 */
-        top: 40vw;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-        transform: none;
-        /* 超出剩餘畫面的作品，改由這個展示區自己捲動。 */
-        overflow-y: auto;
-        /* 手機捲動手感比較自然 */
-        -webkit-overflow-scrolling: touch;
-        /* 避免捲到底時把外面的頁面一起拉動 */
-        overscroll-behavior: contain;
-
-        z-index: 2;
-    }
-
-    body.gallery-mode .slide-main-image {
-        /* 展示模式才使用每張作品自己的上下位置。 */
-        top: var(--mobile-offset, -8.125vw);
-
-        /*
-            首頁模式原本有 translateY(-50%)，
-            展示模式改成直接用 top 控制位置。
-        */
-        transform: none;
-    }
-
-    body.gallery-mode .slide-info {
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-}
-/* ======================== */
 /*     單張作品頁             */
 /* ======================== */
 
@@ -959,21 +843,6 @@ h2 {
     z-index: 0;
 }
 
-
-/* 清晰作品 */
-.work-viewer-image {
-    position: absolute;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    z-index: 1;
-}
 
 /* 作品本體 */
 .work-viewer-image {
@@ -1182,4 +1051,1582 @@ h2 {
 .work-switch button:disabled {
     opacity: 0.25;
     cursor: default;
+}
+
+
+/* ======================== */
+/*     語言切換              */
+/* ======================== */
+
+.language-switcher {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+
+    z-index: 30;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: rgba(255, 255, 255, 0.62);
+
+    font-size: 13px;
+
+    text-shadow:
+        0 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+
+.language-button {
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font: inherit;
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+.language-button:hover {
+    color: white;
+}
+
+
+.language-button.active {
+    color: white;
+    font-weight: 600;
+}
+
+
+.work-language-switcher {
+    position: absolute;
+
+    top:
+        calc(
+            var(--image-top)
+            + var(--image-padding)
+        );
+
+    right:
+        calc(
+            var(--image-left)
+            + var(--image-padding)
+        );
+}
+
+
+/* ======================== */
+/*     ABOUT 按鈕            */
+/* ======================== */
+
+.language-divider {
+    opacity: 0.55;
+}
+
+.about-button {
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    color: rgba(255, 255, 255, 0.82);
+    font: inherit;
+    letter-spacing: 0.08em;
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.about-button:hover {
+    color: white;
+}
+
+
+/* ======================== */
+/*     ABOUT 覆蓋層          */
+/* ======================== */
+
+.about-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 25;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 110px 24px 90px;
+    box-sizing: border-box;
+
+    background:
+        rgba(40, 42, 45, 0.58);
+
+    backdrop-filter:
+        blur(4px)
+        saturate(0.78);
+
+    -webkit-backdrop-filter:
+        blur(4px)
+        saturate(0.78);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.28s ease,
+        visibility 0s linear 0.28s;
+}
+
+.about-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transition-delay: 0s;
+}
+
+
+/* ======================== */
+/*     ABOUT 內容            */
+/* ======================== */
+
+.about-panel {
+    width: min(760px, 86vw);
+
+    /*
+        文字較多時不再把 CLOSE 擠出畫面。
+        內容超過可用高度時，ABOUT 區塊本身可捲動。
+    */
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 6px 12px 10px;
+    box-sizing: border-box;
+
+    scrollbar-width: none;
+
+    color: rgba(255, 255, 255, 0.92);
+    text-align: center;
+
+    text-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.38);
+
+    transform: translateY(12px);
+    opacity: 0;
+
+    transition:
+        transform 0.32s ease,
+        opacity 0.32s ease;
+}
+
+.about-panel::-webkit-scrollbar {
+    display: none;
+}
+
+.about-overlay.show .about-panel {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.about-panel h2 {
+    margin: 0;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+
+    letter-spacing: 0.22em;
+}
+
+.about-line {
+    width: 74px;
+    height: 1px;
+
+    margin: 30px auto 42px;
+
+    background:
+        rgba(255, 255, 255, 0.72);
+}
+
+.about-panel p {
+    margin: 0 auto 14px;
+
+    max-width: 680px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    /*
+        ABOUT 正文：
+        隨視窗比例縮放，但整體比開場句小。
+    */
+    font-size: clamp(0.82rem, 1.05vw, 1rem);
+    line-height: 1.85;
+    letter-spacing: 0.02em;
+}
+
+.about-panel p + p {
+    margin-top: 8px;
+}
+
+.about-close {
+    /*
+        CLOSE 跟在正文後方，不覆蓋文字。
+        上方保留較大的空間，讓按鈕更靠近 ABOUT 底部。
+    */
+    position: relative;
+
+    min-width: 220px;
+
+    margin-top: 64px;
+    padding: 13px 28px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.72);
+
+    background:
+        rgba(25, 25, 28, 0.16);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    color: white;
+
+    font-size: 13px;
+    letter-spacing: 0.18em;
+
+    cursor: pointer;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease;
+}
+
+.about-close:hover {
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    border-color: white;
+}
+
+.about-close span {
+    margin-left: 12px;
+    font-size: 18px;
+    line-height: 0;
+}
+
+@media (max-width: 700px), (orientation: portrait) {
+
+    .about-overlay {
+        padding:
+            90px
+            20px
+            70px;
+    }
+
+    .about-panel {
+        width: min(92vw, 620px);
+    }
+
+    .about-line {
+        margin:
+            22px auto
+            30px;
+    }
+
+    .about-panel p {
+        font-size: clamp(0.78rem, 3.2vw, 0.94rem);
+        line-height: 1.75;
+    }
+
+    .about-close {
+        min-width: 190px;
+        margin-top: 52px;
+    }
+}
+
+
+
+/* ABOUT 內文的小層次 */
+.about-welcome {
+    margin-bottom: 28px;
+
+    /*
+        「歡迎來到／白針的收藏冊」
+        比正文更大，並跟著視窗比例縮放。
+    */
+    font-size: clamp(1.25rem, 2.2vw, 1.85rem);
+    line-height: 1.55;
+    letter-spacing: 0.035em;
+}
+
+.about-welcome > div:last-child {
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.about-ending {
+    margin-top: 26px;
+}
+
+@media (max-height: 760px) {
+
+    .about-overlay {
+        padding-top: 72px;
+        padding-bottom: 52px;
+    }
+
+    .about-panel {
+        max-height: calc(100vh - 124px);
+    }
+
+    .about-line {
+        margin-top: 20px;
+        margin-bottom: 26px;
+    }
+
+    .about-welcome {
+        margin-bottom: 18px;
+    }
+
+    .about-panel p {
+        line-height: 1.7;
+    }
+
+    .about-close {
+        margin-top: 48px;
+    }
+}
+
+
+/* ======================== */
+/*     ABOUT 日文排版        */
+/* ======================== */
+
+html[lang="ja"] .about-panel p,
+html[lang="ja"] .about-welcome {
+    word-break: normal;
+    overflow-wrap: anywhere;
+    line-break: strict;
+}
+
+
+/* 日文分類名稱較長，維持單行並稍微縮小 */
+html[lang="ja"] .drawer-tab {
+    font-size: clamp(12px, 0.88vw, 15px);
+    letter-spacing: 0.035em;
+}
+
+html[lang="ja"] .drawer-tab[data-filter="character"] {
+    font-size: clamp(11px, 0.80vw, 14px);
+    letter-spacing: 0;
+}
+
+
+/* ======================== */
+/*     字體：4 號 文藝收藏    */
+/* ======================== */
+
+html[lang="zh-TW"] body {
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+html[lang="ja"] body {
+    font-family: "Noto Sans JP", "Noto Sans TC", sans-serif;
+}
+
+html[lang="en"] body {
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+/* 網站標題、ABOUT：文藝感 */
+.site-title,
+.hero-title,
+.hero-content h1,
+.about-panel h2,
+.about-welcome {
+    font-family: "LXGW WenKai TC", "Noto Sans TC", serif;
+    font-weight: 400;
+}
+
+/* 分類標籤仍保持清楚、俐落 */
+html[lang="zh-TW"] .drawer-tab {
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+html[lang="ja"] .drawer-tab {
+    font-family: "Noto Sans JP", "Noto Sans TC", sans-serif;
+}
+
+html[lang="en"] .drawer-tab {
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+/* ABOUT 內文也帶一點書卷感，但不影響其他 UI */
+.about-panel p {
+    font-family: "LXGW WenKai TC", "Noto Sans TC", serif;
+    font-weight: 400;
+}
+
+
+/* ======================== */
+/*   抽屜：與標籤同色系      */
+/* ======================== */
+
+/*
+    標籤保持淺色。
+    抽屜則使用同色相、稍深且低飽和的版本，
+    讓分類有辨識度但不搶作品圖片。
+*/
+.work-drawer[data-drawer="all"] {
+    --drawer-color: 190, 218, 207;
+}
+
+.work-drawer[data-drawer="year"] {
+    --drawer-color: 193, 207, 235;
+}
+
+.work-drawer[data-drawer="artist"] {
+    --drawer-color: 231, 190, 198;
+}
+
+.work-drawer[data-drawer="character"] {
+    --drawer-color: 226, 208, 177;
+}
+
+
+/* ======================== */
+/*     首頁作品資訊字體       */
+/* ======================== */
+
+/* 右下角作品標題：4 號文藝收藏 */
+.slide-info-title {
+    font-family: "LXGW WenKai TC", "Noto Sans TC", serif;
+    font-weight: 400;
+}
+
+/* 右下角作者、日期：保持清楚 */
+.slide-info-artist,
+.slide-info-date {
+    font-family: "Noto Sans TC", "Noto Sans JP", sans-serif;
+}
+
+
+/* ======================== */
+/*     單篇作品頁字體         */
+/* ======================== */
+
+/* 作品名稱 */
+.work-viewer-info h1,
+#work-title {
+    font-family: "LXGW WenKai TC", "Noto Sans TC", serif;
+    font-weight: 400;
+}
+
+/* 作者、日期、作者連結 */
+#work-artist,
+#work-date,
+.work-artist-links,
+.work-artist-links a {
+    font-family: "Noto Sans TC", "Noto Sans JP", sans-serif;
+}
+
+/* HOME、上一張／下一張 */
+.work-back,
+.work-switch,
+.work-switch button {
+    font-family: "Noto Sans TC", "Noto Sans JP", sans-serif;
+}
+
+
+/* ================================ */
+/* 作品頁導覽：SVG 06 最終版         */
+/* ================================ */
+
+.work-navigation {
+    position: absolute;
+
+    left: calc(var(--image-left) + var(--image-width) / 2);
+    right: auto;
+    bottom: calc((100vh - var(--image-top) - var(--image-height)) + 22px);
+
+    width: 224px;
+    height: 40px;
+
+    z-index: 6;
+
+    display: grid;
+    grid-template-columns: 64px 96px 64px;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateX(-50%);
+
+    pointer-events: none;
+}
+
+/* SVG 為整組導覽共用座標，不參與點擊 */
+.work-nav-svg {
+    position: absolute;
+    inset: 0;
+
+    width: 224px;
+    height: 40px;
+
+    overflow: visible;
+    pointer-events: none;
+}
+
+/* 線條預設隱藏 */
+.work-nav-line {
+    opacity: 0;
+
+    transition:
+        opacity .18s ease,
+        transform .22s ease;
+}
+
+.work-nav-line-left {
+    transform-box: fill-box;
+    transform-origin: left center;
+    transform: scaleX(.25);
+}
+
+.work-nav-line-right {
+    transform-box: fill-box;
+    transform-origin: right center;
+    transform: scaleX(.25);
+}
+
+.work-nav-line-main,
+.work-nav-line-glow {
+    fill: none;
+    stroke-linecap: round;
+}
+
+.work-nav-line-main {
+    stroke: rgba(255,255,255,.82);
+    stroke-width: 1.25;
+}
+
+.work-nav-line-glow {
+    stroke: rgba(210,225,255,.42);
+    stroke-width: 3.5;
+    filter: url(#work-nav-glow);
+}
+
+/* 三個可點元素完全共用同一套垂直中心 */
+.work-navigation .work-back,
+.work-navigation .work-nav-arrow {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 40px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+
+    color: rgba(255,255,255,.72);
+    text-decoration: none;
+    text-shadow: 0 1px 6px rgba(0,0,0,.62);
+
+    line-height: 1;
+
+    pointer-events: auto;
+    cursor: pointer;
+
+    transition:
+        color .18s ease,
+        text-shadow .18s ease;
+}
+
+.work-navigation .work-back {
+    font-family: "Noto Sans TC", "Noto Sans JP", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: .12em;
+}
+
+.work-navigation .work-nav-arrow {
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+}
+
+/* Hover 左：只浮現左側內線 */
+.work-navigation:has(#work-prev:hover) .work-nav-line-left {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+/* Hover HOME：左右線同時浮現 */
+.work-navigation:has(.work-back:hover) .work-nav-line-left,
+.work-navigation:has(.work-back:hover) .work-nav-line-right {
+    opacity: .88;
+    transform: scaleX(1);
+}
+
+/* Hover 右：只浮現右側內線 */
+.work-navigation:has(#work-next:hover) .work-nav-line-right {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+/* 被 hover 的文字 / 箭頭提亮 */
+.work-navigation .work-back:hover,
+.work-navigation .work-nav-arrow:hover {
+    color: #fff;
+    text-shadow:
+        0 1px 7px rgba(0,0,0,.72),
+        0 0 9px rgba(220,232,255,.20);
+}
+
+/* 鍵盤操作 */
+.work-navigation .work-back:focus-visible,
+.work-navigation .work-nav-arrow:focus-visible {
+    outline: 1px solid rgba(255,255,255,.52);
+    outline-offset: 1px;
+}
+
+
+/* ================================ */
+/* SVG 06：視覺對齊修正             */
+/* ================================ */
+
+/* 箭頭改用 SVG，避免字型 ‹ › 本身的基線偏差 */
+.work-navigation .work-nav-arrow {
+    font-size: 0;
+}
+
+.work-nav-chevron {
+    display: block;
+    width: 12px;
+    height: 18px;
+    overflow: visible;
+}
+
+.work-nav-chevron path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* HOME 做 1px 視覺補正，讓字面中心與箭頭/線條一致 */
+.work-navigation .work-back {
+    transform: translateY(-1px);
+}
+
+.work-navigation .work-back:hover {
+    transform: translateY(-1px);
+}
+
+/* ================================================== */
+/* 手機版首頁：最終整合版                             */
+/* 桌面版不受影響                                     */
+/* ================================================== */
+
+@media (max-width: 700px), (orientation: portrait) {
+
+    :root {
+        --mobile-topbar-h: 36px;
+        --mobile-hero-h: 39vw;
+        --mobile-index-h: 48px;
+    }
+
+    /* ---------- 手機頁面固定框架 ---------- */
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+
+        overflow: hidden;
+        overflow-x: clip;
+
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+
+    main {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        height: 100dvh;
+
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    /* ---------- 頂部列 + Hero ---------- */
+
+    .hero,
+    body.gallery-mode .hero {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        max-width: 100%;
+        height:
+            calc(
+                var(--mobile-topbar-h)
+                + var(--mobile-hero-h)
+            );
+        min-height: 0;
+
+        z-index: 11;
+
+        background: rgba(20, 20, 20, 0.34);
+        box-sizing: border-box;
+    }
+
+    /* 標題：靠左、在 36px 頂部列中垂直置中 */
+    .hero-content {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        right: auto;
+
+        width: auto;
+        height: var(--mobile-topbar-h);
+
+        z-index: 5;
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        transform: none;
+    }
+
+    .hero-content h1 {
+        margin: 0;
+
+        font-size: clamp(22px, 6.4vw, 30px);
+        line-height: 1;
+        white-space: nowrap;
+
+        /* 中文字型的視覺重心略高，做少量光學補正 */
+        transform: translateY(5px);
+    }
+
+    /* 語言 / ABOUT：同一列靠右 */
+    .language-switcher {
+        position: absolute;
+        top: 0;
+        right: 6px;
+        left: auto;
+
+        height: var(--mobile-topbar-h);
+
+        z-index: 8;
+
+        display: flex;
+        align-items: center;
+        gap: 1px;
+
+        font-size: clamp(9.5px, 2.35vw, 11px);
+        line-height: 1;
+
+        transform: none;
+    }
+
+    .language-button,
+    .about-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-height: 30px;
+        padding: 0 4px;
+
+        font-size: inherit;
+        line-height: 1;
+
+        box-sizing: border-box;
+    }
+
+    .language-button {
+        min-width: 28px;
+    }
+
+    .about-button {
+        min-width: 48px;
+    }
+
+    .language-divider {
+        margin: 0 1px;
+    }
+
+    /* ---------- Hero 幻燈片 ---------- */
+
+    .slideshow,
+    body.gallery-mode .slideshow {
+        position: absolute;
+        top: var(--mobile-topbar-h);
+        left: 0;
+        right: 0;
+        bottom: auto;
+
+        width: 100%;
+        height: var(--mobile-hero-h);
+    }
+
+    .slide-bg {
+        background-size: cover;
+        background-position: center;
+
+        filter: blur(20px);
+        transform: scale(1.1);
+    }
+
+    .slide-main,
+    body.gallery-mode .slide-main {
+        display: block;
+
+        position: absolute;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        overflow: hidden;
+
+        z-index: 1;
+    }
+
+    /*
+        清晰主圖維持完整 16:9 高度。
+        Hero 只顯示 39vw，高度差由 mobilePosition 控制裁切位置。
+    */
+    .slide-main-image,
+    body.gallery-mode .slide-main-image {
+        position: absolute;
+        left: 0;
+        top: var(--mobile-offset, -8.625vw);
+
+        width: 100%;
+        height: 56.25vw;
+
+        transform: none;
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .slide-info,
+    body.gallery-mode .slide-info {
+        top: auto;
+        right: 10px;
+        bottom: 8px;
+
+        transform: none;
+        opacity: 1;
+    }
+
+    .slide-info-title {
+        font-size: clamp(0.92rem, 4vw, 1.12rem);
+    }
+
+    .slide-info-artist {
+        font-size: clamp(0.72rem, 3.2vw, 0.9rem);
+    }
+
+    .slide-info-date {
+        font-size: clamp(0.66rem, 2.8vw, 0.8rem);
+    }
+
+    /* ---------- 固定四色索引 + 下方獨立捲動 ---------- */
+
+    .work-drawer {
+        position: fixed;
+
+        top:
+            calc(
+                var(--mobile-topbar-h)
+                + var(--mobile-hero-h)
+            );
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-height: 0;
+
+        padding-top: var(--mobile-index-h);
+
+        z-index: 10;
+
+        transform: none;
+        overflow: hidden;
+
+        background: rgba(246, 244, 239, 0.72);
+
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        box-sizing: border-box;
+    }
+
+    .work-drawer:hover {
+        transform: none;
+    }
+
+    .drawer-tabs {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: auto;
+
+        z-index: 2;
+
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        width: 100%;
+        height: var(--mobile-index-h);
+
+        gap: 0;
+
+        background:
+            linear-gradient(
+                to right,
+                rgba(215, 235, 227, 0.82) 0%,
+                rgba(215, 235, 227, 0.82) 25%,
+                rgba(217, 229, 255, 0.82) 25%,
+                rgba(217, 229, 255, 0.82) 50%,
+                rgba(246, 215, 220, 0.82) 50%,
+                rgba(246, 215, 220, 0.82) 75%,
+                rgba(239, 226, 204, 0.82) 75%,
+                rgba(239, 226, 204, 0.82) 100%
+            );
+    }
+
+    .drawer-tab,
+    .drawer-tab:not(:first-child),
+    .work-drawer:hover .drawer-tab {
+        position: relative;
+
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        height: var(--mobile-index-h);
+
+        margin: 0;
+        padding: 0 4px;
+
+        border: 0;
+        border-radius: 0;
+
+        background-image: none !important;
+        background-color: rgba(255, 255, 255, 0.24);
+        background-size: auto;
+
+        opacity: 1;
+        pointer-events: auto;
+
+        color: rgba(35, 35, 35, 0.70);
+        font-size: clamp(12px, 3.1vw, 15px);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+
+        filter: none;
+        transform: none;
+        box-shadow: none;
+
+        transition:
+            color 0.18s ease,
+            background-color 0.18s ease;
+    }
+
+    .drawer-tab::after {
+        content: "";
+
+        position: absolute;
+        left: 22%;
+        right: 22%;
+        bottom: 0;
+
+        height: 3px;
+
+        border-radius: 999px;
+
+        background: currentColor;
+
+        opacity: 0;
+        transform: scaleX(0.35);
+
+        transition:
+            opacity 0.18s ease,
+            transform 0.18s ease;
+    }
+
+    .drawer-tab.active {
+        color: rgba(25, 25, 25, 0.90);
+        background-color: rgba(255, 255, 255, 0.48);
+
+        filter: none;
+    }
+
+    .drawer-tab.active::after {
+        opacity: 0.72;
+        transform: scaleX(1);
+    }
+
+    .drawer-tab:hover {
+        transform: none;
+        filter: none;
+
+        background-color: rgba(255, 255, 255, 0.40);
+    }
+
+    /* ---------- 可捲動內容區 ---------- */
+
+    .drawer-body {
+        position: relative;
+
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        min-height: 0;
+
+        margin: 0;
+        padding: 10px 10px 18px;
+
+        box-sizing: border-box;
+
+        background: rgba(var(--drawer-color), 0.42);
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+
+        scrollbar-width: none;
+    }
+
+    .drawer-body::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* ---------- 第二層篩選 ---------- */
+
+    .drawer-filter-options,
+    .drawer-filter-options.is-short {
+        position: relative;
+
+        top: auto;
+        left: auto;
+        right: auto;
+
+        width: 100%;
+        max-width: 100%;
+        height: 0;
+
+        margin: 0;
+
+        overflow: hidden;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transform: none;
+    }
+
+    .drawer-filter-options.show,
+    .drawer-filter-options.is-short.show {
+        width: 100%;
+        height: 38px;
+
+        margin: 0 0 10px;
+
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+
+        transform: none;
+    }
+
+    .filter-track,
+    .drawer-filter-options.is-short .filter-track {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        width: 100%;
+        height: 38px;
+
+        gap: 8px;
+        padding: 0 3px;
+
+        box-sizing: border-box;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-mask-image: none;
+        mask-image: none;
+
+        scroll-snap-type: x proximity;
+        overscroll-behavior-x: contain;
+    }
+
+    .filter-option {
+        flex: 0 0 auto;
+
+        min-height: 28px;
+        padding: 5px 12px;
+
+        font-size: 12px;
+
+        scroll-snap-align: start;
+    }
+
+    /* ---------- 作品列表 ---------- */
+
+    .drawer-works {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        gap: 12px;
+
+        overflow: visible;
+        box-sizing: border-box;
+    }
+
+    .drawer-works .work-card {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+
+        margin: 0;
+        padding: 0;
+
+        flex: none;
+    }
+
+    .work-thumbnail {
+        min-width: 0;
+        max-width: 100%;
+
+        box-sizing: border-box;
+    }
+
+    .drawer-works .work-card img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+
+        border-radius: 10px;
+    }
+
+    .work-thumbnail-title {
+        font-size: clamp(12px, 3.2vw, 15px);
+    }
+
+    /* 舊 gallery-mode 的 recent 規則不再參與手機首頁 */
+    body.gallery-mode .recent {
+        position: static;
+        inset: auto;
+
+        transform: none;
+        overflow: visible;
+    }
+}
+
+
+/* 極窄手機：避免標題與右側導覽互相擠壓 */
+@media (max-width: 360px) {
+
+    .hero-content h1 {
+        font-size: 21px;
+    }
+
+    .language-switcher {
+        right: 4px;
+        gap: 0;
+
+        font-size: 9px;
+    }
+
+    .language-button {
+        min-width: 25px;
+        padding: 0 2px;
+    }
+
+    .about-button {
+        min-width: 43px;
+        padding: 0 3px;
+    }
+}
+
+/* ================================================== */
+/* 作品頁導覽：提高辨識度                             */
+/* ================================================== */
+
+.work-back {
+    color: rgba(255, 255, 255, 0.96);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.85),
+        0 0 8px rgba(0, 0, 0, 0.55);
+}
+
+.work-nav-chevron path,
+.work-nav-line-main {
+    stroke: rgba(255, 255, 255, 0.92);
+}
+
+.work-nav-line-glow {
+    stroke: rgba(0, 0, 0, 0.72);
+    opacity: 0.9;
+}
+
+.work-nav-arrow {
+    filter:
+        drop-shadow(0 1px 2px rgba(0, 0, 0, 0.85))
+        drop-shadow(0 0 5px rgba(0, 0, 0, 0.45));
+}
+
+/* ================================================== */
+/* 手機版首頁：日文／英文標題尺寸微調                 */
+/* 只影響首頁標題，不改中文與其他版面                  */
+/* ================================================== */
+
+@media (max-width: 700px), (orientation: portrait) {
+    html[lang="ja"] .hero-content h1 {
+        font-size: clamp(18px, 5.2vw, 24px);
+    }
+
+    html[lang="en"] .hero-content h1 {
+        font-size: clamp(17px, 4.9vw, 22px);
+        letter-spacing: -0.01em;
+    }
+}
+
+/* ================================================== */
+/* 手機版作品頁：Gallery 03B 最終整合版               */
+/* 標題區 : 主圖 = 1 : 3                              */
+/* ================================================== */
+
+@media (max-width: 700px), (orientation: portrait) {
+
+    .work-page {
+        --mobile-work-image-h: 56.25vw;
+        --mobile-work-title-h: calc(var(--mobile-work-image-h) / 3);
+
+        position: relative;
+
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+
+        overflow: hidden;
+
+        background-color: #f6f0e7;
+        background-image: url("images/ui/work-gallery-wall-03b.svg");
+        background-size: 100vw auto;
+        background-position: top center;
+        background-repeat: no-repeat;
+    }
+
+    .work-page .work-viewer {
+        position: relative;
+
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+
+        overflow: hidden;
+    }
+
+    /* 03B 使用 SVG 牆面與標題框，不使用模糊原圖背景 */
+    .work-page .work-viewer-bg,
+    .work-page .work-viewer::before {
+        display: none;
+    }
+
+    /* ---------- 標題框內文字 ---------- */
+
+    .work-page .work-viewer-info h1,
+    .work-page #work-title {
+        position: fixed;
+        top: 0;
+        left: 44px;
+        right: 44px;
+
+        z-index: 6;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: auto;
+        height: var(--mobile-work-title-h);
+
+        margin: 0;
+
+        overflow: hidden;
+
+        color: rgba(54, 47, 40, 0.90);
+
+        font-size: clamp(15px, 5.1vw, 52px);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.035em;
+
+        text-align: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        text-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.58);
+
+        background: transparent;
+
+        transform: none;
+    }
+
+    /* ---------- 主圖 ---------- */
+
+    .work-page .work-viewer-image {
+        position: fixed;
+        top: var(--mobile-work-title-h);
+        left: 0;
+        right: 0;
+
+        width: 100%;
+        height: var(--mobile-work-image-h);
+
+        z-index: 2;
+
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: transparent;
+    }
+
+    /* ---------- 下方作品資訊 ---------- */
+
+    .work-page .work-viewer-info {
+        position: fixed;
+
+        top:
+            calc(
+                var(--mobile-work-title-h)
+                + var(--mobile-work-image-h)
+            );
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 3;
+
+        padding: 24px 20px 82px;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        box-sizing: border-box;
+
+        color: rgba(55, 49, 44, 0.88);
+
+        text-align: center;
+        text-shadow: none;
+
+        background: transparent;
+
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .work-page .work-viewer-info::-webkit-scrollbar {
+        display: none;
+    }
+
+    .work-page .work-artist-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
+
+        margin: 0;
+    }
+
+    .work-page #work-artist {
+        color: rgba(49, 44, 40, 0.90);
+
+        font-size: clamp(19px, 6.2vw, 64px);
+        font-weight: 400;
+        line-height: 1.35;
+        letter-spacing: 0.035em;
+
+        text-align: center;
+    }
+
+    .work-page .work-artist-links {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px 14px;
+
+        width: 100%;
+        max-height: none;
+
+        margin: 14px 0 0;
+
+        overflow: visible;
+
+        opacity: 1;
+        pointer-events: auto;
+
+        transform: none;
+    }
+
+    .work-page .work-artist-links a {
+        color: rgba(82, 72, 63, 0.58);
+
+        font-size: clamp(11px, 3.5vw, 36px);
+        line-height: 1;
+
+        text-decoration: none;
+    }
+
+    .work-page .work-artist-links a:hover {
+        color: rgba(55, 48, 42, 0.90);
+    }
+
+    .work-page #work-date {
+        margin-top: 22px;
+
+        color: rgba(82, 72, 63, 0.50);
+
+        font-size: clamp(12px, 4vw, 41px);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.10em;
+
+        text-align: center;
+
+        opacity: 1;
+    }
+
+    /* ---------- 下方導覽 ---------- */
+
+    .work-page .work-navigation {
+        position: fixed;
+
+        left: 50%;
+        right: auto;
+        bottom: 10px;
+
+        width: 224px;
+        height: 40px;
+
+        z-index: 7;
+
+        transform: translateX(-50%);
+
+        /* 整組導覽（HOME + 左右箭頭）共用同一個縮放基準，
+           兩邊的實際尺寸都從這個值算出來，
+           確保不管縮放到多大多小，彼此的比例永遠一致，
+           不會各自用不同速度變大變小。
+           容器本身的寬高、線條位置維持固定，
+           所以彼此之間的「距離」不會因為縮放而跑掉。 */
+        --work-nav-scale: clamp(10px, 3.1vw, 15px);
+    }
+
+    .work-page .work-navigation .work-back,
+    .work-page .work-navigation .work-nav-arrow {
+        color: rgba(71, 62, 54, 0.62);
+
+        text-shadow: none;
+    }
+
+    .work-page .work-navigation .work-back {
+        font-size: var(--work-nav-scale);
+        font-weight: 500;
+        letter-spacing: 0.16em;
+    }
+
+    .work-page .work-nav-chevron {
+        /* 跟 HOME 用同一個比例換算（12:18 對 13px 字級的原始設計比例），
+           所以箭頭永遠跟著 HOME 字級同步縮放 */
+        width: calc(var(--work-nav-scale) * 0.92);
+        height: calc(var(--work-nav-scale) * 1.38);
+    }
+
+    .work-page .work-nav-chevron path,
+    .work-page .work-nav-line-main {
+        stroke: rgba(71, 62, 54, 0.48);
+    }
+
+    .work-page .work-nav-line-glow {
+        stroke: rgba(255, 255, 255, 0.68);
+        opacity: 1;
+    }
+
+    .work-page .work-nav-arrow {
+        filter: none;
+    }
 }

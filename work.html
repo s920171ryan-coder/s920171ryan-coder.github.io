@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
@@ -21,20 +21,44 @@
         <section class="work-viewer">
 
             <!-- 作品導覽 -->
-<div class="work-navigation">
+            <div class="work-navigation">
 
-    <!-- 返回首頁 -->
-    <a class="work-back" href="index.html">返回</a>
+                <svg class="work-nav-svg" viewBox="0 0 224 40" aria-hidden="true">
+                    <defs>
+                        <filter id="work-nav-glow" x="-40%" y="-300%" width="180%" height="700%">
+                            <feGaussianBlur stdDeviation="1.4"></feGaussianBlur>
+                        </filter>
+                    </defs>
 
-    <!-- 上一張 / 下一張 -->
-    <div class="work-switch">
-        <button id="work-prev" type="button">‹</button>
-        <button id="work-next" type="button">›</button>
-    </div>
+                    <g class="work-nav-line work-nav-line-left">
+                        <line class="work-nav-line-glow" x1="50" y1="20" x2="84" y2="20"></line>
+                        <line class="work-nav-line-main" x1="50" y1="20" x2="84" y2="20"></line>
+                    </g>
 
-</div>
+                    <g class="work-nav-line work-nav-line-right">
+                        <line class="work-nav-line-glow" x1="140" y1="20" x2="174" y2="20"></line>
+                        <line class="work-nav-line-main" x1="140" y1="20" x2="174" y2="20"></line>
+                    </g>
+                </svg>
+
+                <button id="work-prev" class="work-nav-arrow" type="button" aria-label="Previous work">
+                    <svg class="work-nav-chevron" viewBox="0 0 16 24" aria-hidden="true">
+                        <path d="M11 4 L5 12 L11 20"></path>
+                    </svg>
+                </button>
+
+                <a class="work-back" href="index.html">HOME</a>
+
+                <button id="work-next" class="work-nav-arrow" type="button" aria-label="Next work">
+                    <svg class="work-nav-chevron" viewBox="0 0 16 24" aria-hidden="true">
+                        <path d="M5 4 L11 12 L5 20"></path>
+                    </svg>
+                </button>
+
+            </div>
 
             <!-- 作品圖片 -->
+            <div class="work-viewer-bg" id="work-bg"></div>
             <div class="work-viewer-image" id="work-image"></div>
 
             <!-- 作品資訊 -->
@@ -64,6 +88,7 @@
 
     <script src="data/artists.js"></script>
     <script src="data/works.js"></script>
+    <script src="shared.js"></script>
     <script src="work.js"></script>
 
 </body>

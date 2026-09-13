@@ -2,39 +2,9 @@
 //     公開作品資料
 // ========================
 
-// 只使用允許公開的作品
-// 並依完稿日期由新到舊排列
-const publicWorks = works
-    .filter(function(work) {
-        return work.published === true;
-    })
-    .sort(function(a, b) {
-        return new Date(b.date) - new Date(a.date);
-    });
-
-
-// ========================
-//     作品顯示名稱
-// ========================
-
-// 資料中：
-// character = 角色名稱
-// title     = 作品標題
-//
-// 畫面顯示時才組合成：
-// 「角色名稱 作品標題」
-function getWorkDisplayTitle(work) {
-    return `${work.character} ${work.title}`.trim();
-}
-
-
-// ========================
-//     日期顯示格式
-// ========================
-
-function getDisplayDate(work) {
-    return work.date.replaceAll("-", " / ");
-}
+// getWorkDisplayTitle() / getDisplayDate() 定義在 shared.js，
+// 記得在 index.html 裡於 script.js 之前載入 shared.js
+const publicWorks = getPublicWorks(works);
 
 
 // ========================
@@ -112,12 +82,17 @@ function setMobilePosition(element, work) {
 
     /*
         完整 16:9 主圖高度 = 56.25vw
-        展示模式高度       = 40vw
+        手機固定 Hero 高度 = 39vw
 
-        可上下調整範圍：
-        56.25 - 40 = 16.25vw
+        可上下裁切調整範圍：
+        56.25 - 39 = 17.25vw
+
+        mobilePosition：
+        0   = 保留圖片上方
+        50  = 置中裁切
+        100 = 保留圖片下方
     */
-    const maxOffset = 16.25;
+    const maxOffset = 17.25;
 
     /*
         0   = 貼齊最上方
@@ -214,7 +189,7 @@ slide1.addEventListener(
 
         if (slide1Work) {
             window.location.href =
-                `works/${slide1Work.id}/`;
+                `works/${slide1Work.id}/index.html`;
         }
     }
 );
@@ -225,7 +200,7 @@ slide2.addEventListener(
 
         if (slide2Work) {
             window.location.href =
-                `works/${slide2Work.id}/`;
+                `works/${slide2Work.id}/index.html`;
         }
     }
 );
@@ -311,8 +286,8 @@ if (publicWorks.length > 0) {
                 slide1.style.opacity = 1;
                 slide2.style.opacity = 0;
 
-                slide1.style.pointerEvents = "none";
-                slide2.style.pointerEvents = "auto";
+                slide1.style.pointerEvents = "auto";
+                slide2.style.pointerEvents = "none";
             }
 
 
@@ -380,7 +355,7 @@ function renderWorks(workList) {
             function() {
 
                 window.location.href =
-                    `works/${work.id}/`;
+                    `works/${work.id}/index.html`;
             }
         );
 
@@ -436,7 +411,9 @@ function createFilterOption(
 ) {
 
     const button =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     button.className =
         "filter-option";
@@ -462,24 +439,19 @@ function createFilterOption(
     );
 
 
-    filterOptions.appendChild(
-        button
-    );
+    return button;
 }
 
 
 // ========================
-//     顯示子分類
+//     建立子分類資料
 // ========================
 
-function showFilterOptions(filter) {
+function getFilterOptionList(
+    filter
+) {
 
-    clearTimeout(
-        filterCloseTimer
-    );
-
-    // 清空上一個分類
-    filterOptions.innerHTML = "";
+    const optionList = [];
 
 
     // ========================
@@ -492,6 +464,7 @@ function showFilterOptions(filter) {
             ...new Set(
                 publicWorks.map(
                     function(work) {
+
                         return work.date.slice(
                             0,
                             4
@@ -505,6 +478,7 @@ function showFilterOptions(filter) {
         // 新年份排在前面
         years.sort(
             function(a, b) {
+
                 return b - a;
             }
         );
@@ -527,10 +501,10 @@ function showFilterOptions(filter) {
                     );
 
 
-                createFilterOption(
-                    year,
-                    filteredWorks
-                );
+                optionList.push({
+                    text: year,
+                    works: filteredWorks
+                });
             }
         );
     }
@@ -546,6 +520,7 @@ function showFilterOptions(filter) {
             ...new Set(
                 publicWorks.map(
                     function(work) {
+
                         return work.artist;
                     }
                 )
@@ -559,6 +534,7 @@ function showFilterOptions(filter) {
                 const filteredWorks =
                     publicWorks.filter(
                         function(work) {
+
                             return (
                                 work.artist ===
                                 artistId
@@ -567,10 +543,13 @@ function showFilterOptions(filter) {
                     );
 
 
-                createFilterOption(
-                    artists[artistId].name,
-                    filteredWorks
-                );
+                optionList.push({
+                    text:
+                        artists[artistId].name,
+
+                    works:
+                        filteredWorks
+                });
             }
         );
     }
@@ -586,6 +565,7 @@ function showFilterOptions(filter) {
             ...new Set(
                 publicWorks.map(
                     function(work) {
+
                         return work.character;
                     }
                 )
@@ -599,6 +579,7 @@ function showFilterOptions(filter) {
                 const filteredWorks =
                     publicWorks.filter(
                         function(work) {
+
                             return (
                                 work.character ===
                                 character
@@ -607,21 +588,304 @@ function showFilterOptions(filter) {
                     );
 
 
-                createFilterOption(
-                    character,
-                    filteredWorks
+                optionList.push({
+                    text: character,
+                    works: filteredWorks
+                });
+            }
+        );
+    }
+
+
+    return optionList;
+}
+
+
+// ========================
+//     子分類位置
+// ========================
+
+function setFilterOptionsPosition(
+    tab
+) {
+
+    const parent =
+        filterOptions.offsetParent;
+
+    if (!parent) {
+        return;
+    }
+
+
+    const parentRect =
+        parent.getBoundingClientRect();
+
+    const tabRect =
+        tab.getBoundingClientRect();
+
+
+    // 子分類列中心
+    // 對準目前主分類標籤中心
+    const center =
+        tabRect.left +
+        tabRect.width / 2 -
+        parentRect.left;
+
+
+    filterOptions.style.setProperty(
+        "--filter-center",
+        `${center}px`
+    );
+}
+
+
+// ========================
+//     顯示子分類
+// ========================
+
+function showFilterOptions(
+    filter,
+    tab
+) {
+
+    clearTimeout(
+        filterCloseTimer
+    );
+
+
+    // 清空上一個分類
+    filterOptions.innerHTML = "";
+
+    filterOptions.classList.remove(
+        "is-short"
+    );
+
+
+    const optionList =
+        getFilterOptionList(
+            filter
+        );
+
+
+    // 沒有選項時不顯示
+    if (optionList.length === 0) {
+
+        filterOptions.classList.remove(
+            "show"
+        );
+
+        return;
+    }
+
+
+    // 讓子分類列中心
+    // 對準目前主標籤中心
+    setFilterOptionsPosition(
+        tab
+    );
+
+
+    // 建立真正可捲動的軌道
+    const track =
+        document.createElement(
+            "div"
+        );
+
+    track.className =
+        "filter-track";
+
+
+    // ========================
+    //     3 個以下
+    // ========================
+
+    if (optionList.length <= 3) {
+
+        filterOptions.classList.add(
+            "is-short"
+        );
+
+
+        optionList.forEach(
+            function(item) {
+
+                track.appendChild(
+                    createFilterOption(
+                        item.text,
+                        item.works
+                    )
                 );
             }
         );
     }
 
 
-    // 沒有選項時不顯示空白列
-    if (
-        filterOptions.children.length > 0
-    ) {
-        filterOptions.classList.add(
-            "show"
+    // ========================
+    //     超過 3 個
+    // ========================
+
+    else {
+
+        /*
+            建立三份相同內容：
+
+            [前一組] [中間組] [下一組]
+
+            平常停在中間組。
+            接近任一端時，
+            瞬間搬回相同位置的另一組，
+            視覺上就會形成無限循環。
+        */
+        for (
+            let copy = 0;
+            copy < 3;
+            copy++
+        ) {
+
+            optionList.forEach(
+                function(item, index) {
+
+                    const button =
+                        createFilterOption(
+                            item.text,
+                            item.works
+                        );
+
+
+                    button.dataset.copy =
+                        copy;
+
+                    button.dataset.index =
+                        index;
+
+
+                    track.appendChild(
+                        button
+                    );
+                }
+            );
+        }
+    }
+
+
+    filterOptions.appendChild(
+        track
+    );
+
+
+    filterOptions.classList.add(
+        "show"
+    );
+
+
+    // ========================
+    //     無限循環初始化
+    // ========================
+
+    if (optionList.length > 3) {
+
+        requestAnimationFrame(
+            function() {
+
+                const middleFirst =
+                    track.querySelector(
+                        '[data-copy="1"][data-index="0"]'
+                    );
+
+                const nextFirst =
+                    track.querySelector(
+                        '[data-copy="2"][data-index="0"]'
+                    );
+
+
+                if (
+                    !middleFirst ||
+                    !nextFirst
+                ) {
+                    return;
+                }
+
+
+                // 一整組選項的實際寬度
+                const sectionWidth =
+                    nextFirst.offsetLeft -
+                    middleFirst.offsetLeft;
+
+
+                // 一開始讓中間組的第一個選項
+                // 位於顯示區中央附近
+                track.scrollLeft =
+                    middleFirst.offsetLeft -
+                    (
+                        track.clientWidth -
+                        middleFirst.offsetWidth
+                    ) / 2;
+
+
+                // ------------------------
+                //     無限循環
+                // ------------------------
+
+                track.addEventListener(
+                    "scroll",
+                    function() {
+
+                        /*
+                            捲進第一組時，
+                            搬到中間組的相同位置。
+                        */
+                        if (
+                            track.scrollLeft <
+                            sectionWidth * 0.55
+                        ) {
+
+                            track.scrollLeft +=
+                                sectionWidth;
+                        }
+
+
+                        /*
+                            捲進第三組時，
+                            搬回中間組的相同位置。
+                        */
+                        else if (
+                            track.scrollLeft >
+                            sectionWidth * 1.55
+                        ) {
+
+                            track.scrollLeft -=
+                                sectionWidth;
+                        }
+                    }
+                );
+
+
+                // ------------------------
+                //     滾輪轉成橫向捲動
+                // ------------------------
+
+                track.addEventListener(
+                    "wheel",
+                    function(event) {
+
+                        const amount =
+                            Math.abs(event.deltaY) >
+                            Math.abs(event.deltaX)
+                                ? event.deltaY
+                                : event.deltaX;
+
+
+                        track.scrollLeft +=
+                            amount;
+
+
+                        event.preventDefault();
+                    },
+                    {
+                        passive: false
+                    }
+                );
+            }
         );
     }
 }
@@ -684,7 +948,8 @@ if (filter !== "all") {
 
 
                 showFilterOptions(
-                    filter
+                    filter,
+                    tab
                 );
             }
         );
@@ -833,6 +1098,16 @@ drawerWorks.addEventListener(
     "wheel",
     function(event) {
 
+        // 桌面版維持橫向作品列；
+        // 手機 / 直向版改成正常上下捲動，不攔截滾輪。
+        if (
+            window.matchMedia(
+                "(max-width: 700px), (orientation: portrait)"
+            ).matches
+        ) {
+            return;
+        }
+
         drawerWorks.scrollLeft +=
             event.deltaY;
 
@@ -841,5 +1116,122 @@ drawerWorks.addEventListener(
     },
     {
         passive: false
+    }
+);
+
+// ========================
+//     ABOUT 覆蓋層
+// ========================
+
+const aboutOpen =
+    document.getElementById(
+        "about-open"
+    );
+
+const aboutOverlay =
+    document.getElementById(
+        "about-overlay"
+    );
+
+const aboutClose =
+    document.getElementById(
+        "about-close"
+    );
+
+
+function openAbout() {
+
+    aboutOverlay.classList.add(
+        "show"
+    );
+
+    aboutOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
+
+
+function closeAbout() {
+
+    // 關閉前先把焦點移出即將隱藏的 ABOUT，
+    // 避免 aria-hidden 與鍵盤焦點衝突。
+    if (
+        aboutOverlay.contains(
+            document.activeElement
+        )
+    ) {
+        aboutOpen.focus();
+    }
+
+    aboutOverlay.classList.remove(
+        "show"
+    );
+
+    aboutOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+}
+
+
+aboutOpen.addEventListener(
+    "click",
+    openAbout
+);
+
+
+aboutClose.addEventListener(
+    "click",
+    closeAbout
+);
+
+
+aboutOverlay.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target ===
+            aboutOverlay
+        ) {
+            closeAbout();
+        }
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape" &&
+            aboutOverlay.classList.contains(
+                "show"
+            )
+        ) {
+            closeAbout();
+        }
+    }
+);
+
+
+// ========================
+//     語言切換後重新整理 UI
+// ========================
+
+window.addEventListener(
+    "languagechange",
+    function() {
+
+        // 作品名稱、角色名、繪師名不翻譯，
+        // 因此只需要重新套用目前網站介面文字。
+        if (
+            typeof applyLanguage ===
+            "function"
+        ) {
+            applyLanguage();
+        }
     }
 );

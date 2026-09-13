@@ -21,37 +21,11 @@ const workId =
 //     公開作品資料
 // ========================
 
+// getWorkDisplayTitle() / getDisplayDate() 定義在 shared.js，
+// 記得在 work.html 及靜態作品頁裡於 work.js 之前載入 shared.js
+//
 // 只允許 published: true 的作品
-const publicWorks = works
-    .filter(function(work) {
-        return work.published === true;
-    })
-    .sort(function(a, b) {
-        return new Date(b.date) - new Date(a.date);
-    });
-
-
-// ========================
-//     作品顯示名稱
-// ========================
-
-function getWorkDisplayTitle(work) {
-
-    return `${work.character} ${work.title}`.trim();
-}
-
-
-// ========================
-//     日期顯示格式
-// ========================
-
-function getDisplayDate(work) {
-
-    return work.date.replaceAll(
-        "-",
-        " / "
-    );
-}
+const publicWorks = getPublicWorks(works);
 
 
 // ========================
@@ -274,6 +248,17 @@ else {
 
     document.title =
         "找不到作品｜白針的收藏冊";
+
+
+    // 沒有作品可以切換，
+    // 上一張／下一張按鈕直接隱藏
+    document.getElementById(
+        "work-prev"
+    ).style.display = "none";
+
+    document.getElementById(
+        "work-next"
+    ).style.display = "none";
 }
 
 
@@ -325,8 +310,20 @@ if (work && publicWorks.length > 1) {
                 ];
 
 
+            // 靜態作品頁位於 works/作品ID/index.html，
+            // 往上一層就是其他作品資料夾；
+            // 舊版 work.html?id= 則在網站根目錄，
+            // 要先進入 works/ 才找得到資料夾。
+            //
+            // 網址直接指到 index.html（而不是只寫資料夾），
+            // 這樣不管是本機直接開檔案（file://）
+            // 還是架在網頁伺服器上都能正常跳轉；
+            // 只寫資料夾路徑時，本機開檔案會變成看到
+            // 資料夾清單，而不是真的作品頁。
             window.location.href =
-                `../${prevWork.id}/`;
+                window.currentWorkId
+                    ? `../${prevWork.id}/index.html`
+                    : `works/${prevWork.id}/index.html`;
         }
     );
 
@@ -354,7 +351,9 @@ if (work && publicWorks.length > 1) {
 
 
             window.location.href =
-                `../${nextWork.id}/`;
+                window.currentWorkId
+                    ? `../${nextWork.id}/index.html`
+                    : `works/${nextWork.id}/index.html`;
         }
     );
 }

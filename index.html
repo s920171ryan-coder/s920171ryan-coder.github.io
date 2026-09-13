@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>白針的收藏冊</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -21,72 +23,117 @@
             <!-- 自動輪播幻燈片 -->
             <div class="slideshow">
 
-                <!-- 第一個幻燈片 -->
                 <div id="slide-image-1" class="slide">
-
-                    <!-- 放大、模糊的背景 -->
                     <div class="slide-bg"></div>
 
-                    <!-- 清晰主圖的顯示窗口 -->
                     <div class="slide-main">
-                        <!-- 真正的清晰作品 -->
                         <div class="slide-main-image"></div>
                     </div>
 
-                    <!-- 作品資訊 -->
                     <div class="slide-info">
                         <div class="slide-info-title"></div>
                         <div class="slide-info-artist"></div>
                         <div class="slide-info-date"></div>
                     </div>
-
                 </div>
 
-                <!-- 第二個幻燈片 -->
                 <div id="slide-image-2" class="slide">
-
-                    <!-- 放大、模糊的背景 -->
                     <div class="slide-bg"></div>
 
-                    <!-- 清晰主圖的顯示窗口 -->
                     <div class="slide-main">
-                        <!-- 真正的清晰作品 -->
                         <div class="slide-main-image"></div>
                     </div>
 
-                    <!-- 作品資訊 -->
                     <div class="slide-info">
                         <div class="slide-info-title"></div>
                         <div class="slide-info-artist"></div>
                         <div class="slide-info-date"></div>
                     </div>
-
                 </div>
 
             </div>
 
             <!-- 網站標題 -->
             <div class="hero-content">
-                <h1>白針的收藏冊</h1>
+                <h1 data-i18n="siteTitle">白針的收藏冊</h1>
+            </div>
+
+            <!-- 語言 / ABOUT -->
+            <div class="language-switcher" aria-label="Language">
+                <button class="language-button active" type="button" data-lang="zh-TW">ZH</button>
+                <button class="language-button" type="button" data-lang="ja">JP</button>
+                <button class="language-button" type="button" data-lang="en">EN</button>
+
+                <span class="language-divider">｜</span>
+
+                <button class="about-button" id="about-open" type="button">
+                    ABOUT
+                </button>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="about-overlay" id="about-overlay" aria-hidden="true">
+                <div class="about-panel">
+
+                    <h2>ABOUT</h2>
+                    <div class="about-line"></div>
+
+                    <div class="about-welcome">
+                        <div data-i18n="aboutWelcome">歡迎來到</div>
+                        <div data-i18n="aboutName">「白針的收藏冊」</div>
+                    </div>
+
+                    <p data-i18n-html="aboutP1">
+                        我一直想找一個地方，<br>
+                        集中整理這些年來委託的作品。
+                    </p>
+
+                    <p data-i18n-html="aboutP2">
+                        試過一些方式，卻始終找不到真正合適的地方。<br>
+                        於是最後，我決定自己做一個。
+                    </p>
+
+                    <p data-i18n="aboutP3">
+                        這就是「白針的收藏冊」。
+                    </p>
+
+                    <p data-i18n-html="aboutP4">
+                        這裡收錄著我委託不同創作者完成的作品，<br>
+                        記錄著我喜歡的一切。
+                    </p>
+
+                    <p data-i18n-html="aboutP5">
+                        感謝每一位將我的想法化為作品的創作者，<br>
+                        也謝謝你的來訪。
+                    </p>
+
+                    <p class="about-ending" data-i18n="aboutEnd">
+                        祝你逛得開心。
+                    </p>
+
+                    <button class="about-close" id="about-close" type="button">
+                        <span data-i18n="close">CLOSE</span>
+                        <span aria-hidden="true">×</span>
+                    </button>
+
+                </div>
             </div>
 
         </section>
 
         <!-- ======================== -->
-        <!-- 底部作品抽屜 -->
+        <!-- 作品索引 / 作品區 -->
         <!-- ======================== -->
 
         <section class="work-drawer">
 
-            <!-- 資料夾分類標籤 -->
             <div class="drawer-tabs">
-                <button class="drawer-tab active" data-filter="all">作品</button>
-                <button class="drawer-tab" data-filter="year">年份</button>
-                <button class="drawer-tab" data-filter="artist">作者</button>
-                <button class="drawer-tab" data-filter="character">角色</button>
+                <button class="drawer-tab active" type="button" data-filter="all" data-i18n="works">作品</button>
+                <button class="drawer-tab" type="button" data-filter="year" data-i18n="year">年份</button>
+                <button class="drawer-tab" type="button" data-filter="artist" data-i18n="artist">作者</button>
+                <button class="drawer-tab" type="button" data-filter="character" data-i18n="character">角色</button>
             </div>
 
-            <!-- 作品區 -->
             <div class="drawer-body">
                 <div class="drawer-filter-options" id="filter-options"></div>
                 <div class="drawer-works" id="works"></div>
@@ -96,8 +143,10 @@
 
     </main>
 
+    <script src="data/i18n.js"></script>
     <script src="data/artists.js"></script>
     <script src="data/works.js"></script>
+    <script src="shared.js"></script>
     <script src="script.js"></script>
 
 </body>

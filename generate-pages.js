@@ -6,6 +6,14 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
+const {
+    getPublicWorks,
+    getWorkDisplayTitle,
+    getDisplayDate
+} = require(
+    path.join(__dirname, "shared.js")
+);
+
 
 // ========================
 //     基本設定
@@ -17,11 +25,6 @@ const siteURL =
 const worksOutputFolder = path.join(
     __dirname,
     "works"
-);
-
-const webImageFolder = path.join(
-    __dirname,
-    "web-images"
 );
 
 
@@ -76,15 +79,9 @@ const artists = loadData(
 //     公開作品
 // ========================
 
-// 只產生允許公開的作品
-// 並依完稿日期由新到舊排列
-const publicWorks = works
-    .filter(function(work) {
-        return work.published === true;
-    })
-    .sort(function(a, b) {
-        return new Date(b.date) - new Date(a.date);
-    });
+// 只產生允許公開的作品，
+// 排序規則定義在 shared.js（依完稿日期由新到舊）
+const publicWorks = getPublicWorks(works);
 
 
 // ========================
@@ -98,29 +95,6 @@ function escapeHTML(text) {
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;");
-}
-
-
-// ========================
-//     作品顯示名稱
-// ========================
-
-function getWorkDisplayTitle(work) {
-
-    return `${work.character} ${work.title}`.trim();
-}
-
-
-// ========================
-//     日期顯示格式
-// ========================
-
-function getDisplayDate(work) {
-
-    return work.date.replaceAll(
-        "-",
-        " / "
-    );
 }
 
 
@@ -145,36 +119,12 @@ if (
 }
 
 
-// 每次重新產生前，先刪除舊分享圖片
-if (
-    fs.existsSync(
-        webImageFolder
-    )
-) {
-
-    fs.rmSync(
-        webImageFolder,
-        {
-            recursive: true,
-            force: true
-        }
-    );
-}
-
-
 // ========================
 //     建立乾淨輸出資料夾
 // ========================
 
 fs.mkdirSync(
     worksOutputFolder,
-    {
-        recursive: true
-    }
-);
-
-fs.mkdirSync(
-    webImageFolder,
     {
         recursive: true
     }
@@ -199,38 +149,17 @@ publicWorks.forEach(
 
 
         // ========================
-        //     建立網站用圖片
+        //     分享用圖片網址
         // ========================
 
-        const sourceImage = path.join(
-            __dirname,
-            work.image
-        );
-
-        const imageExtension =
-            path.extname(
-                work.image
-            ).toLowerCase();
-
-        const webImageName =
-            `${work.id}${imageExtension}`;
-
-        const webImagePath = path.join(
-            webImageFolder,
-            webImageName
-        );
-
-
-        // 複製成乾淨英文檔名
-        fs.copyFileSync(
-            sourceImage,
-            webImagePath
-        );
-
-
-        // 公開圖片網址
+        // 直接指向 images/ 裡的原始檔案，
+        // 不再複製一份到 web-images/。
+        //
+        // 檔名可能含有中日文或空白，
+        // encodeURI() 會把這些字元轉成網址能安全使用的編碼，
+        // 但不會動到 "/" 這種路徑分隔符號。
         const webImageURL =
-            `${siteURL}/web-images/${webImageName}`;
+            `${siteURL}/${encodeURI(work.image)}`;
 
 
         // ========================
@@ -386,30 +315,56 @@ publicWorks.forEach(
 
             <div class="work-navigation">
 
+                <svg
+                    class="work-nav-svg"
+                    viewBox="0 0 224 40"
+                    aria-hidden="true"
+                >
+                    <defs>
+                        <filter id="work-nav-glow" x="-40%" y="-300%" width="180%" height="700%">
+                            <feGaussianBlur stdDeviation="1.4"></feGaussianBlur>
+                        </filter>
+                    </defs>
+
+                    <g class="work-nav-line work-nav-line-left">
+                        <line class="work-nav-line-glow" x1="50" y1="20" x2="84" y2="20"></line>
+                        <line class="work-nav-line-main" x1="50" y1="20" x2="84" y2="20"></line>
+                    </g>
+
+                    <g class="work-nav-line work-nav-line-right">
+                        <line class="work-nav-line-glow" x1="140" y1="20" x2="174" y2="20"></line>
+                        <line class="work-nav-line-main" x1="140" y1="20" x2="174" y2="20"></line>
+                    </g>
+                </svg>
+
+                <button
+                    id="work-prev"
+                    class="work-nav-arrow"
+                    type="button"
+                    aria-label="Previous work"
+                >
+                    <svg class="work-nav-chevron" viewBox="0 0 16 24" aria-hidden="true">
+                        <path d="M11 4 L5 12 L11 20"></path>
+                    </svg>
+                </button>
+
                 <a
                     class="work-back"
                     href="../../index.html"
                 >
-                    返回
+                    HOME
                 </a>
 
-                <div class="work-switch">
-
-                    <button
-                        id="work-prev"
-                        type="button"
-                    >
-                        ‹
-                    </button>
-
-                    <button
-                        id="work-next"
-                        type="button"
-                    >
-                        ›
-                    </button>
-
-                </div>
+                <button
+                    id="work-next"
+                    class="work-nav-arrow"
+                    type="button"
+                    aria-label="Next work"
+                >
+                    <svg class="work-nav-chevron" viewBox="0 0 16 24" aria-hidden="true">
+                        <path d="M5 4 L11 12 L5 20"></path>
+                    </svg>
+                </button>
 
             </div>
 
@@ -483,6 +438,7 @@ publicWorks.forEach(
     <!--     作品頁功能            -->
     <!-- ======================== -->
 
+    <script src="../../shared.js"></script>
     <script src="../../work.js"></script>
 
 </body>

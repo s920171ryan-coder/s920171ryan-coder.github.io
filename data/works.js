@@ -13,7 +13,7 @@ const works = [
         artist: "aori",
         published: true,
 
-        image: "images/ヒメヒナ -AORI青凜 リクエスト241010.jpg",
+        image: "images/himehina-million.jpg",
 
         mobilePosition: 3
     },
@@ -27,7 +27,7 @@ const works = [
         artist: "nishino-eri",
         published: true,
 
-        image: "images/日和あかね -西之エリ リクエスト240818.jpg",
+        image: "images/hiyori-akane-morning.jpg",
 
         mobilePosition: 8
     },
@@ -39,9 +39,9 @@ const works = [
         date: "2024-06-30",
         character: "戌月れん",
         artist: "zmmin",
-        published: false,
+        published: true,
 
-        image: "images/戌月れん -ZM敏 リクエスト240630.jpg",
+        image: "images/inuzuki-ren-birthday.jpg",
 
         mobilePosition: 13
     },
@@ -53,9 +53,9 @@ const works = [
         date: "2024-03-15",
         character: "戌月れん",
         artist: "zmmin",
-        published: false,
+        published: true,
 
-        image: "images/戌月れん -ZM敏 リクエスト240315.jpg",
+        image: "images/inuzuki-ren-morning.jpg",
 
         mobilePosition: 90
     },
@@ -67,9 +67,9 @@ const works = [
         date: "2024-10-18",
         character: "青凛Aori",
         artist: "nekoboshi-horo",
-        published: false,
+        published: true,
 
-        image: "images/青凛Aori -猫星ほろ リクエスト241018.jpg",
+        image: "images/aori-halloween.jpg",
 
         mobilePosition: 0
     },
@@ -81,9 +81,9 @@ const works = [
         date: "2025-01-24",
         character: "Ellise",
         artist: "shimoji-yori",
-        published: false,
+        published: true,
 
-        image: "images/Ellise -下地ヨリ リクエスト250124.jpg",
+        image: "images/ellise-bath.jpg",
 
         mobilePosition: 0
     },
@@ -95,9 +95,9 @@ const works = [
         date: "2025-09-13",
         character: "ORI禮",
         artist: "boni",
-        published: false,
+        published: true,
 
-        image: "images/ORI禮 -蘿蔔泥Boni リクエスト250913.jpg",
+        image: "images/ori-graduation.jpg",
 
         mobilePosition: 10
     },
@@ -109,9 +109,9 @@ const works = [
         date: "2025-03-21",
         character: "アズマリム",
         artist: "isana",
-        published: false,
+        published: true,
 
-        image: "images/アズマリム -ISANA リクエスト250321.jpg",
+        image: "images/azumalim-touring.jpg",
 
         mobilePosition: 10
     },
@@ -123,9 +123,9 @@ const works = [
         date: "2026-07-30",
         character: "ヒメヒナ",
         artist: "harukaze-ruu",
-        published: false,
+        published: true,
 
-        image: "images/ヒメヒナ -春風るぅ リクエスト260730-1.jpg",
+        image: "images/himehina-marriage.jpg",
 
         mobilePosition: 15
     },
@@ -137,9 +137,9 @@ const works = [
         date: "2026-07-30",
         character: "ヒメヒナ",
         artist: "harukaze-ruu",
-        published: false,
+        published: true,
 
-        image: "images/ヒメヒナ -春風るぅ リクエスト260730-2.jpg",
+        image: "images/himehina-happiness.jpg",
 
         mobilePosition: 15
     },
@@ -151,9 +151,9 @@ const works = [
         date: "2026-08-20",
         character: "凪乃ましろ",
         artist: "izumi-kei",
-        published: false,
+        published: true,
 
-        image: "images/凪乃ましろ -いずみけい リクエスト260820.jpg",
+        image: "images/nagino-mashiro-onsen.jpg",
 
         mobilePosition: 15
     },
@@ -165,9 +165,9 @@ const works = [
         date: "2026-04-25",
         character: "阿雄",
         artist: "gibun",
-        published: false,
+        published: true,
 
-        image: "images/阿雄 -GIBUN(ギブン) リクエスト260425.jpg",
+        image: "images/axiong-changing.jpg",
 
         mobilePosition: 25
     },
@@ -179,9 +179,9 @@ const works = [
         date: "2026-07-31",
         character: "青凛Aori",
         artist: "cine",
-        published: false,
+        published: true,
 
-        image: "images/青凛Aori -CinE リクエスト260731.jpg",
+        image: "images/aori-play-together.jpg",
 
         mobilePosition: 0
     },
@@ -193,9 +193,9 @@ const works = [
         date: "2026-07-31",
         character: "書靈booklive",
         artist: "mimihachi",
-        published: false,
+        published: true,
 
-        image: "images/書靈booklive -みみはち リクエスト260731.jpg",
+        image: "images/booklive-drink.jpg",
 
         mobilePosition: 0
     },
@@ -207,9 +207,9 @@ const works = [
         date: "2026-08-03",
         character: "真夜幽禰",
         artist: "togemaru",
-        published: false,
+        published: true,
 
-        image: "images/真夜幽禰 -とげまる リクエスト260803.jpg",
+        image: "images/mayo-yune-dont-stare.jpg",
 
         mobilePosition: 0
     },
@@ -221,9 +221,9 @@ const works = [
         date: "2026-03-30",
         character: "書靈booklive",
         artist: "sumi",
-        published: false,
+        published: true,
 
-        image: "images/書靈booklive -酥米sumi リクエスト260330.jpg",
+        image: "images/booklive-stargazing.jpg",
 
         mobilePosition: 23
     },
@@ -235,9 +235,9 @@ const works = [
         date: "2025-03-04",
         character: "茨むあん",
         artist: "isshorin",
-        published: false,
+        published: true,
 
-        image: "images/茨むあん -一緒臨 リクエスト250304.jpg",
+        image: "images/ibara-muan-4th-anniversary.jpg",
 
         mobilePosition: 8
     },
@@ -249,9 +249,9 @@ const works = [
         date: "2025-02-11",
         character: "結月莉莉奈",
         artist: "kkix25",
-        published: false,
+        published: true,
 
-        image: "images/結月莉莉奈 -KKIX25 リクエスト250211.jpg",
+        image: "images/yuzuki-ririna-morning.jpg",
 
         mobilePosition: 3
     },
@@ -263,9 +263,9 @@ const works = [
         date: "2025-05-17",
         character: "結月莉莉奈",
         artist: "kkix25",
-        published: false,
+        published: true,
 
-        image: "images/結月莉莉奈 -KKIX25 リクエスト250517.jpg",
+        image: "images/yuzuki-ririna-tipsy.jpg",
 
         mobilePosition: 3
     },
@@ -277,9 +277,9 @@ const works = [
         date: "2026-07-09",
         character: "愛未ゆあ",
         artist: "kirifrog",
-        published: false,
+        published: true,
 
-        image: "images/愛未ゆあ -KiriFrog リクエスト260709.jpg",
+        image: "images/aimi-yua-sea.jpg",
 
         mobilePosition: 10
     },
@@ -291,9 +291,9 @@ const works = [
         date: "2026-02-15",
         character: "諾芙Nove",
         artist: "datang",
-        published: false,
+        published: true,
 
-        image: "images/諾芙Nove -大堂 リクエスト260215.jpg",
+        image: "images/nove-water-play.jpg",
 
         mobilePosition: 10
     },
@@ -305,9 +305,9 @@ const works = [
         date: "2025-07-24",
         character: "真夜幽禰",
         artist: "boni",
-        published: false,
+        published: true,
 
-        image: "images/真夜幽禰 -蘿蔔泥Boni リクエスト250724.jpg",
+        image: "images/mayo-yune-debut.jpg",
 
         mobilePosition: 17
     },
@@ -319,9 +319,9 @@ const works = [
         date: "2026-08-24",
         character: "春水レイ",
         artist: "yahako",
-        published: false,
+        published: true,
 
-        image: "images/春水レイ -やはこ リクエスト260824.jpg",
+        image: "images/harumizu-rei-swimsuit.jpg",
 
         mobilePosition: 3
     },
@@ -333,9 +333,9 @@ const works = [
         date: "2026-09-06",
         character: "くまのにい",
         artist: "minase-nami",
-        published: false,
+        published: true,
 
-        image: "images/くまのにい -水瀬なみ リクエスト260906.jpg",
+        image: "images/kumano-nii-morning.jpg",
 
         mobilePosition: 3
     }
