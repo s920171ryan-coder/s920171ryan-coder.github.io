@@ -178,7 +178,7 @@ function setSlide(
 
     // 背景（有 blur 濾鏡，用縮圖看不出差別）
     slideBg.style.backgroundImage =
-        `url("${getThumbnailImage(work)}")`;
+        `url("${work.image}")`;
 
     // 清晰主圖，維持原圖畫質
     slideMain.style.backgroundImage =
