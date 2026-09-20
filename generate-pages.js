@@ -338,7 +338,7 @@ publicWorks.forEach(
 
                 <a
                     class="work-back"
-                    href="../../index.html"
+                    href="../../"
                 >
                     HOME
                 </a>

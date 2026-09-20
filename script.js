@@ -176,11 +176,11 @@ function setSlide(
 ) 
 {
 
-    // 背景
+    // 背景（有 blur 濾鏡，用縮圖看不出差別）
     slideBg.style.backgroundImage =
-        `url("${work.image}")`;
+        `url("${getThumbnailImage(work)}")`;
 
-    // 清晰主圖
+    // 清晰主圖，維持原圖畫質
     slideMain.style.backgroundImage =
         `url("${work.image}")`;
 
@@ -216,7 +216,7 @@ slide1.addEventListener(
 
         if (slide1Work) {
             window.location.href =
-                `works/${slide1Work.id}/index.html`;
+                `works/${slide1Work.id}/`;
         }
     }
 );
@@ -227,7 +227,7 @@ slide2.addEventListener(
 
         if (slide2Work) {
             window.location.href =
-                `works/${slide2Work.id}/index.html`;
+                `works/${slide2Work.id}/`;
         }
     }
 );
@@ -414,7 +414,7 @@ function renderWorks(workList) {
             <div class="work-thumbnail">
 
                 <img
-                    src="${escapeHTML(work.image)}"
+                    src="${escapeHTML(getThumbnailImage(work))}"
                     alt="${escapeHTML(displayTitle)}"
                     loading="lazy"
                     decoding="async"
@@ -434,7 +434,7 @@ function renderWorks(workList) {
             function() {
 
                 window.location.href =
-                    `works/${work.id}/index.html`;
+                    `works/${work.id}/`;
             }
         );
 

@@ -51,13 +51,32 @@
 
 
     // ========================
+    //     縮圖路徑
+    // ========================
+
+    // 原圖：images/xxx.jpg
+    // 縮圖：images/thumbs/xxx.jpg
+    //
+    // 縮圖檔案由 generate-thumbnails.js 產生，
+    // 這裡只是依規則算出路徑，不做任何圖片處理
+    function getThumbnailImage(work) {
+
+        return work.image.replace(
+            "images/",
+            "images/thumbs/"
+        );
+    }
+
+
+    // ========================
     //     匯出
     // ========================
 
     const sharedWorks = {
         getPublicWorks: getPublicWorks,
         getWorkDisplayTitle: getWorkDisplayTitle,
-        getDisplayDate: getDisplayDate
+        getDisplayDate: getDisplayDate,
+        getThumbnailImage: getThumbnailImage
     };
 
     // Node（generate-pages.js 用 require 讀取）
@@ -70,6 +89,7 @@
         window.getPublicWorks = getPublicWorks;
         window.getWorkDisplayTitle = getWorkDisplayTitle;
         window.getDisplayDate = getDisplayDate;
+        window.getThumbnailImage = getThumbnailImage;
     }
 
 })(typeof globalThis !== "undefined" ? globalThis : this);

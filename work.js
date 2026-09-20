@@ -87,15 +87,22 @@ if (work) {
             ? `../../${work.image}`
             : work.image;
 
+    // 模糊背景用縮圖版（getThumbnailImage 定義在 shared.js），
+    // 一樣要處理靜態作品頁的路徑前綴
+    const thumbnailImagePath =
+        window.currentWorkId
+            ? `../../${getThumbnailImage(work)}`
+            : getThumbnailImage(work);
 
-    // 清晰主圖
+
+    // 清晰主圖，維持原圖畫質
     workImage.style.backgroundImage =
         `url("${imagePath}")`;
 
 
-    // 模糊背景
+    // 模糊背景（有 blur 濾鏡，用縮圖看不出差別）
     workBg.style.backgroundImage =
-        `url("${imagePath}")`;
+        `url("${thumbnailImagePath}")`;
 
 
     // ========================
@@ -336,15 +343,12 @@ if (work && publicWorks.length > 1) {
             // 舊版 work.html?id= 則在網站根目錄，
             // 要先進入 works/ 才找得到資料夾。
             //
-            // 網址直接指到 index.html（而不是只寫資料夾），
-            // 這樣不管是本機直接開檔案（file://）
-            // 還是架在網頁伺服器上都能正常跳轉；
-            // 只寫資料夾路徑時，本機開檔案會變成看到
-            // 資料夾清單，而不是真的作品頁。
+            // 正式網站使用乾淨網址：works/作品ID/
+            // GitHub Pages 會自動載入該資料夾內的 index.html。
             window.location.href =
                 window.currentWorkId
-                    ? `../${prevWork.id}/index.html`
-                    : `works/${prevWork.id}/index.html`;
+                    ? `../${prevWork.id}/`
+                    : `works/${prevWork.id}/`;
         }
     );
 
@@ -373,8 +377,8 @@ if (work && publicWorks.length > 1) {
 
             window.location.href =
                 window.currentWorkId
-                    ? `../${nextWork.id}/index.html`
-                    : `works/${nextWork.id}/index.html`;
+                    ? `../${nextWork.id}/`
+                    : `works/${nextWork.id}/`;
         }
     );
 }
