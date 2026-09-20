@@ -234,6 +234,48 @@ slide2.addEventListener(
 
 
 // ========================
+//     依序預先載入幻燈片圖片
+// ========================
+
+// 如果一次把所有作品的圖都下載，
+// 會跟下面的作品縮圖搶頻寬；
+// 改成排隊、一張下載完才下載下一張，
+// 依照輪播播放順序排，
+// 這樣真的輪到某張作品時，
+// 圖片多半已經在瀏覽器快取裡，切換不會卡頓
+function preloadSlideImages(
+    workList,
+    index
+) {
+
+    if (index >= workList.length) {
+        return;
+    }
+
+    const image = new Image();
+
+    image.onload = function() {
+
+        preloadSlideImages(
+            workList,
+            index + 1
+        );
+    };
+
+    // 這張失敗也不卡住，繼續排下一張
+    image.onerror = function() {
+
+        preloadSlideImages(
+            workList,
+            index + 1
+        );
+    };
+
+    image.src = workList[index].image;
+}
+
+
+// ========================
 //     啟動幻燈片
 // ========================
 
@@ -248,6 +290,14 @@ if (publicWorks.length > 0) {
         slide1InfoArtist,
         slide1InfoDate,
         publicWorks[0]
+    );
+
+
+    // 第一張已經在載了，
+    // 從第二張開始依序排隊預先載入
+    preloadSlideImages(
+        publicWorks,
+        1
     );
 
 
@@ -366,6 +416,8 @@ function renderWorks(workList) {
                 <img
                     src="${escapeHTML(work.image)}"
                     alt="${escapeHTML(displayTitle)}"
+                    loading="lazy"
+                    decoding="async"
                 >
 
                 <div class="work-thumbnail-title">
