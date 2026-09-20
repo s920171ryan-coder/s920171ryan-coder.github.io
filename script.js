@@ -1,4 +1,20 @@
 // ========================
+//     HTML 安全處理
+// ========================
+
+// 用來跳脫組進 innerHTML 的文字（例如作品標題），
+// 跟 generate-pages.js 裡的 escapeHTML 邏輯一致
+function escapeHTML(text) {
+
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+}
+
+
+// ========================
 //     公開作品資料
 // ========================
 
@@ -123,11 +139,22 @@ function setSlideInfo(
     const artist =
         artists[work.artist];
 
+    // 資料打錯字、artist id 對不到 artists.js 時，
+    // 印出是哪件作品有問題，而不是讓整頁噴錯
+    if (!artist) {
+
+        console.warn(
+            `找不到繪師資料：work.id = "${work.id}", artist = "${work.artist}"`
+        );
+    }
+
     titleElement.textContent =
         getWorkDisplayTitle(work);
 
     artistElement.textContent =
-        `${artist.name} 様`;
+        artist
+            ? `${artist.name} 様`
+            : "";
 
     dateElement.textContent =
         getDisplayDate(work);
@@ -337,12 +364,12 @@ function renderWorks(workList) {
             <div class="work-thumbnail">
 
                 <img
-                    src="${work.image}"
-                    alt="${displayTitle}"
+                    src="${escapeHTML(work.image)}"
+                    alt="${escapeHTML(displayTitle)}"
                 >
 
                 <div class="work-thumbnail-title">
-                    ${displayTitle}
+                    ${escapeHTML(displayTitle)}
                 </div>
 
             </div>
@@ -531,6 +558,21 @@ function getFilterOptionList(
         artistIds.forEach(
             function(artistId) {
 
+                const artist =
+                    artists[artistId];
+
+                // 資料打錯字、artist id 對不到 artists.js 時，
+                // 跳過這個分類，而不是讓整個篩選功能壞掉
+                if (!artist) {
+
+                    console.warn(
+                        `找不到繪師資料：artist = "${artistId}"`
+                    );
+
+                    return;
+                }
+
+
                 const filteredWorks =
                     publicWorks.filter(
                         function(work) {
@@ -544,11 +586,8 @@ function getFilterOptionList(
 
 
                 optionList.push({
-                    text:
-                        artists[artistId].name,
-
-                    works:
-                        filteredWorks
+                    text: artist.name,
+                    works: filteredWorks
                 });
             }
         );
@@ -993,6 +1032,36 @@ drawerTabs.forEach(
 tab.classList.add(
     "active"
 );
+                }
+
+                // 點「年份／作者／角色」
+                // 觸控裝置沒有 mouseenter，
+                // 所以點擊也要展開子分類，
+                // 跟 mouseenter 共用同一段邏輯
+                else {
+
+                    currentDrawerFilter =
+                        tab.dataset.filter;
+
+                    workDrawer.dataset.drawer =
+                        currentDrawerFilter;
+
+                    drawerTabs.forEach(
+                        function(item) {
+                            item.classList.remove(
+                                "active"
+                            );
+                        }
+                    );
+
+                    tab.classList.add(
+                        "active"
+                    );
+
+                    showFilterOptions(
+                        tab.dataset.filter,
+                        tab
+                    );
                 }
             }
         );

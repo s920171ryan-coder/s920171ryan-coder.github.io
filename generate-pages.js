@@ -4,7 +4,6 @@
 
 const fs = require("fs");
 const path = require("path");
-const vm = require("vm");
 
 const {
     getPublicWorks,
@@ -32,46 +31,24 @@ const worksOutputFolder = path.join(
 //     讀取資料檔
 // ========================
 
-function loadData(
-    filePath,
-    variableName
-) {
+// works.js / artists.js 現在跟 shared.js 一樣，
+// 同時支援瀏覽器 <script> 標籤跟 Node require()，
+// 所以這裡可以直接 require，不用再用 vm 手動執行檔案內容
 
-    const code =
-        fs.readFileSync(
-            filePath,
-            "utf8"
-        );
-
-    const context = {};
-
-    vm.createContext(context);
-
-    vm.runInContext(
-        `${code}\nthis.result = ${variableName};`,
-        context
-    );
-
-    return context.result;
-}
-
-
-const works = loadData(
+const { works } = require(
     path.join(
         __dirname,
         "data",
         "works.js"
-    ),
-    "works"
+    )
 );
 
-const artists = loadData(
+const { artists } = require(
     path.join(
         __dirname,
         "data",
         "artists.js"
-    ),
-    "artists"
+    )
 );
 
 
@@ -140,6 +117,17 @@ publicWorks.forEach(
 
         const artist =
             artists[work.artist];
+
+        // 資料打錯字、artist id 對不到 artists.js 時，
+        // 跳過這件作品並提示，而不是讓整個產生流程中斷
+        if (!artist) {
+
+            console.error(
+                `找不到繪師資料，略過此作品：work.id = "${work.id}", artist = "${work.artist}"`
+            );
+
+            return;
+        }
 
         const displayTitle =
             getWorkDisplayTitle(work);

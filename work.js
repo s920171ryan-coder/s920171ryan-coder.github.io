@@ -50,6 +50,15 @@ if (work) {
     const artist =
         artists[work.artist];
 
+    // 資料打錯字、artist id 對不到 artists.js 時，
+    // 印出是哪件作品有問題，而不是讓整頁噴錯
+    if (!artist) {
+
+        console.warn(
+            `找不到繪師資料：work.id = "${work.id}", artist = "${work.artist}"`
+        );
+    }
+
     const displayTitle =
         getWorkDisplayTitle(work);
 
@@ -106,7 +115,9 @@ if (work) {
     document.getElementById(
         "work-artist"
     ).textContent =
-        `${artist.name} 様`;
+        artist
+            ? `${artist.name} 様`
+            : "";
 
 
 // ========================
@@ -123,20 +134,22 @@ const artistLinks =
 //     固定平台
 // ========================
 
-const fixedLinks = [
-    {
-        label: "X",
-        url: artist.x
-    },
-    {
-        label: "Pixiv",
-        url: artist.pixiv
-    },
-    {
-        label: "Skeb",
-        url: artist.skeb
-    }
-];
+const fixedLinks = artist
+    ? [
+        {
+            label: "X",
+            url: artist.x
+        },
+        {
+            label: "Pixiv",
+            url: artist.pixiv
+        },
+        {
+            label: "Skeb",
+            url: artist.skeb
+        }
+    ]
+    : [];
 
 
 // ========================
@@ -198,6 +211,7 @@ fixedLinks.forEach(
 // ========================
 
 if (
+    artist &&
     Array.isArray(
         artist.links
     )
@@ -248,10 +262,17 @@ else {
 
     document.title =
         "找不到作品｜白針的收藏冊";
+}
 
 
-    // 沒有作品可以切換，
-    // 上一張／下一張按鈕直接隱藏
+// ========================
+//     沒有其他作品可切換
+// ========================
+
+// 找不到作品，或公開作品只有一件時，
+// 上一張／下一張按鈕直接隱藏
+if (!work || publicWorks.length <= 1) {
+
     document.getElementById(
         "work-prev"
     ).style.display = "none";

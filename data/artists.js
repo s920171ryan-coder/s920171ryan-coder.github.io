@@ -262,3 +262,15 @@ const artists = {
     }
 
 };
+
+
+// ========================
+//     匯出（供 Node 使用）
+// ========================
+
+// 瀏覽器 <script> 標籤讀取時，
+// typeof module 是 undefined，這段會直接跳過，
+// 不影響原本 const artists 全域變數的用法
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { artists };
+}
