@@ -259,7 +259,7 @@ const artists = {
                 url: "https://lit.link/zh-tw/nami73illustration"
             }
         ]
-    }
+    },
 
 };
 

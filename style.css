@@ -2159,15 +2159,16 @@ html[lang="en"] .drawer-tab {
         display: none;
     }
 
-    /* ---------- 第二層篩選 ---------- */
+    /* ---------- 第二層篩選：捲動時固定在四色標籤下方 ---------- */
 
     .drawer-filter-options,
     .drawer-filter-options.is-short {
-        position: relative;
-
-        top: auto;
+        /* 留在 drawer-body 內，但不會被作品列表一起捲走 */
+        position: sticky;
+        top: 0;
         left: auto;
         right: auto;
+        z-index: 3;
 
         width: 100%;
         max-width: 100%;
@@ -2176,6 +2177,7 @@ html[lang="en"] .drawer-tab {
         margin: 0;
 
         overflow: hidden;
+        background: rgba(var(--drawer-color), 0.95);
 
         opacity: 0;
         visibility: hidden;

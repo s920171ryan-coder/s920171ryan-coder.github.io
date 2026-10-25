@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "filename": "Ellise -下地ヨリ リクエスト250124.jpg",
+      "hash": "2ba3d89a59a97d85367f5888fb9dde881d12e22ebbeceff175100170fa80aa82",
+      "id": "art-250124-c04a00643",
+      "date": "2025-01-24",
+      "character": "Ellise",
+      "artist": "shimoji-yori",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "ORI禮 -蘿蔔泥Boni リクエスト250913.jpg",
+      "hash": "848a38b0fa0f293aab85f3290a0cc12694a84e3fc97facd45178314a118975af",
+      "id": "art-250913-945b30238",
+      "date": "2025-09-13",
+      "character": "ORI禮",
+      "artist": "boni",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "くまのにい -水瀬なみ リクエスト260906.jpg",
+      "hash": "974284bd8c061ef16140334f1b708a55cf54e29d4a496606e6c1a4048417e1cb",
+      "id": "art-260906-b4afdb6df",
+      "date": "2026-09-06",
+      "character": "くまのにい",
+      "artist": "minase-nami",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "アズマリム -ISANA リクエスト250321.jpg",
+      "hash": "1bfc62187488cd1bad5182b389f7ac503ba427b01de513fcd3456e676083d227",
+      "id": "art-250321-dcfd122b4",
+      "date": "2025-03-21",
+      "character": "アズマリム",
+      "artist": "isana",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "ヒメヒナ -AORI青凜 リクエスト241010.jpg",
+      "hash": "d44a5d64137a49a24237bb13a3685a8ddc3156f20949d6b262f3bf556b446823",
+      "id": "art-241010-494bd2916",
+      "date": "2024-10-10",
+      "character": "ヒメヒナ",
+      "artist": "aori",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "凪乃ましろ -いずみけい リクエスト260820.jpg",
+      "hash": "70c5004e43ae6e7a8172ede11b4349553fb7c6ec288a3e7fe7ee9c6bb708d08c",
+      "id": "art-260820-4452fd338",
+      "date": "2026-08-20",
+      "character": "凪乃ましろ",
+      "artist": "izumi-kei",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "古都Laz -いずみけい リクエスト261025.jpg",
+      "hash": "4f8408ba92c8bb53d9f0164885b19f15187138077e648d54400d74783dd0ca9b",
+      "id": "art-261025-991156f0e",
+      "date": "2026-10-25",
+      "character": "古都Laz",
+      "artist": "izumi-kei",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "愛未ゆあ -KiriFrog リクエスト260709.jpg",
+      "hash": "1d74ae8d8b35453dbbb97a6f348323242c89012caa45cbb5451379dea34a92dc",
+      "id": "art-260709-85e98afe1",
+      "date": "2026-07-09",
+      "character": "愛未ゆあ",
+      "artist": "kirifrog",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "戌月れん -ZM敏 リクエスト240315.jpg",
+      "hash": "6167f223347b0c22ba63110366a2fc2055d4daa9c49419ad7dbf62d6b4a2e442",
+      "id": "art-240315-b61448a2c",
+      "date": "2024-03-15",
+      "character": "戌月れん",
+      "artist": "zmmin",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "戌月れん -ZM敏 リクエスト240630.jpg",
+      "hash": "d268c1450f0965fa950f7d7bf9716afdec532904ee35f57b7d9bbd1cffc76c34",
+      "id": "art-240630-8d089b715",
+      "date": "2024-06-30",
+      "character": "戌月れん",
+      "artist": "zmmin",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "日和あかね -西之エリ リクエスト240818.jpg",
+      "hash": "d47fdde9a9f5f071428cd28ff71002cc6b75d4c82c8ae9c967e3687240570c30",
+      "id": "art-240818-9ac17d053",
+      "date": "2024-08-18",
+      "character": "日和あかね",
+      "artist": "nishino-eri",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "春水レイ -やはこ リクエスト260824.jpg",
+      "hash": "b1451f15affb4e7196e4df1f0dceb8319daddc81ddb5e7a3cf0a28035d46a0a5",
+      "id": "art-260824-65cc05b76",
+      "date": "2026-08-24",
+      "character": "春水レイ",
+      "artist": "yahako",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "書靈booklive -みみはち リクエスト260731.jpg",
+      "hash": "b5967be0ff38697a1929887b3ae49bdcfb655a094556265a59d477781d0e8d34",
+      "id": "art-260731-51365b6be",
+      "date": "2026-07-31",
+      "character": "書靈booklive",
+      "artist": "mimihachi",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "書靈booklive -酥米sumi リクエスト260330.jpg",
+      "hash": "f9d3ed76445f7c4f50cded2655c1701c1f781aab639393d184bc37f29e1de4db",
+      "id": "art-260330-b08200f8e",
+      "date": "2026-03-30",
+      "character": "書靈booklive",
+      "artist": "sumi",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "真夜幽禰 -とげまる リクエスト260803.jpg",
+      "hash": "83b9f6bda1d58add8d9270b5eb934f97dfc5a37ad78f73b04f01cf0e04f8e28e",
+      "id": "art-260803-93a5b973a",
+      "date": "2026-08-03",
+      "character": "真夜幽禰",
+      "artist": "togemaru",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "真夜幽禰 -蘿蔔泥Boni リクエスト250724.jpg",
+      "hash": "2c859ef951feb512ea6845d8ec2a55455e41c48dea7ffef2b6b33d42026badbd",
+      "id": "art-250724-9bb50aabf",
+      "date": "2025-07-24",
+      "character": "真夜幽禰",
+      "artist": "boni",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "結月莉莉奈 -KKIX25 リクエスト250211.jpg",
+      "hash": "44c31645b967316ce4661420e9396757bf6878cb57d891d2664140be404bf7e8",
+      "id": "art-250211-88b4c5a13",
+      "date": "2025-02-11",
+      "character": "結月莉莉奈",
+      "artist": "kkix25",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "結月莉莉奈 -KKIX25 リクエスト250517.jpg",
+      "hash": "a44408b5e309b31be1fe2c2ebb9a47b246915f2df118fe7a284d5e6e83492e76",
+      "id": "art-250517-3a9c2919e",
+      "date": "2025-05-17",
+      "character": "結月莉莉奈",
+      "artist": "kkix25",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "茨むあん -一緒臨 リクエスト250304.jpg",
+      "hash": "6604f13d0e47b332e31f51077d4dc9894f55016fe1511696ed11b454952cc319",
+      "id": "art-250304-bacdcd12c",
+      "date": "2025-03-04",
+      "character": "茨むあん",
+      "artist": "isshorin",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "諾芙Nove -大堂 リクエスト260215.jpg",
+      "hash": "ca0ced751543cb93e91d8ed08e0de5a382e789e3c67ca9a7041c7b74d03c4b8b",
+      "id": "art-260215-2d2be9e4f",
+      "date": "2026-02-15",
+      "character": "諾芙Nove",
+      "artist": "datang",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "阿雄 -GIBUN(ギブン) リクエスト260425.jpg",
+      "hash": "603ae23c7508dec40351f0ec0052e06b766b1efc6d5ae8b5a6d95d52e544c233",
+      "id": "art-260425-a18c9adb2",
+      "date": "2026-04-25",
+      "character": "阿雄",
+      "artist": "gibun",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "青凛Aori -CinE リクエスト260731.jpg",
+      "hash": "79731698bb99ba2b1f122176118d6e2c4248dffce6e616c162a14a4717cd623f",
+      "id": "art-260731-681b02f85",
+      "date": "2026-07-31",
+      "character": "青凛Aori",
+      "artist": "cine",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "青凛Aori -猫星ほろ リクエスト241018.jpg",
+      "hash": "ab577f9f9d7369760f1566c5480bbcda90f9ee915dcc7ce2bd1ec88947f5ca27",
+      "id": "art-241018-ac0b80fdc",
+      "date": "2024-10-18",
+      "character": "青凛Aori",
+      "artist": "nekoboshi-horo",
+      "variantNumber": null,
+      "variantGroup": null,
+      "publishedOnce": true
+    },
+    {
+      "filename": "ヒメヒナ -春風るぅ リクエスト260730-1.jpg",
+      "hash": "57144d5764f61a6195cc75df2191244ab9846a0bf92b664e623d35600eba10f8",
+      "id": "art-260730-c1bd8a3ce",
+      "date": "2026-07-30",
+      "character": "ヒメヒナ",
+      "artist": "harukaze-ruu",
+      "variantNumber": 1,
+      "variantGroup": "variants-260730-95a55afdfb",
+      "publishedOnce": true
+    },
+    {
+      "filename": "ヒメヒナ -春風るぅ リクエスト260730-2.jpg",
+      "hash": "0cb72db5291c4dd9256678fd3d8f62b05ac58859277e21037beb130a33fecc37",
+      "id": "art-260730-16c21545e",
+      "date": "2026-07-30",
+      "character": "ヒメヒナ",
+      "artist": "harukaze-ruu",
+      "variantNumber": 2,
+      "variantGroup": "variants-260730-95a55afdfb",
+      "publishedOnce": true
+    }
+  ]
+}

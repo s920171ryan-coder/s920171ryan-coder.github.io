@@ -480,6 +480,19 @@ let filterCloseTimer;
 // 記住目前選中的資料夾
 let currentDrawerFilter = "all";
 
+// 手機版套用新篩選結果後，從列表開頭顯示。
+// 只有真正切換作品清單才重設位置；打開子分類時不會強迫跳回頂部。
+function resetMobileDrawerScroll() {
+    if (!window.matchMedia("(max-width: 700px), (orientation: portrait)").matches) {
+        return;
+    }
+
+    const drawerBody = document.querySelector(".drawer-body");
+    if (drawerBody) {
+        drawerBody.scrollTop = 0;
+    }
+}
+
 // ========================
 //     建立子分類按鈕
 // ========================
@@ -509,6 +522,7 @@ function createFilterOption(
             renderWorks(
                 filteredWorks
             );
+            resetMobileDrawerScroll();
 
             // 收回子分類列
             filterOptions.classList.remove(
@@ -1064,6 +1078,7 @@ if (filter !== "all") {
                     renderWorks(
                         publicWorks
                     );
+                    resetMobileDrawerScroll();
 
                     filterOptions.classList.remove(
                         "show"
