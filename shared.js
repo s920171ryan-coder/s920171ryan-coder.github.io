@@ -36,8 +36,39 @@
     //
     // 畫面顯示時才組合成：
     // 「角色名稱 作品標題」
+    // 作品名稱和篩選標籤分開處理。
+    // 例如 character: "ヒメヒナ" 仍顯示「ヒメヒナ」，
+    // 但角色篩選裡有「田中ヒメ」及「鈴木ヒナ」。
+    const characterFilterAliases = {
+        "ヒメヒナ": ["田中ヒメ", "鈴木ヒナ"]
+    };
+
+    function getWorkCharacters(work) {
+        const value = work.character;
+        const list = Array.isArray(value) ? value : [value];
+
+        return [...new Set(list
+            .filter(name => typeof name === "string")
+            .flatMap(name => name.split(/[＋+]/u))
+            .map(name => name.trim())
+            .filter(Boolean)
+            .flatMap(name => characterFilterAliases[name] || [name])
+        )];
+    }
+
     function getWorkDisplayTitle(work) {
-        return `${work.character} ${work.title}`.trim();
+        const value = work.character;
+        const names = (Array.isArray(value) ? value : [value])
+            .filter(name => typeof name === "string")
+            .map(name => name.trim())
+            .filter(Boolean);
+
+        // 兼容先前已手動拆分的資料，標題仍維持組合名稱。
+        const isHimeHina = names.length === 2 &&
+            names.includes("田中ヒメ") && names.includes("鈴木ヒナ");
+
+        const characterLabel = isHimeHina ? "ヒメヒナ" : names.join("・");
+        return `${characterLabel} ${work.title || ""}`.trim();
     }
 
 
@@ -75,6 +106,7 @@
     const sharedWorks = {
         getPublicWorks: getPublicWorks,
         getWorkDisplayTitle: getWorkDisplayTitle,
+        getWorkCharacters: getWorkCharacters,
         getDisplayDate: getDisplayDate,
         getThumbnailImage: getThumbnailImage
     };
@@ -88,6 +120,7 @@
     if (typeof window !== "undefined") {
         window.getPublicWorks = getPublicWorks;
         window.getWorkDisplayTitle = getWorkDisplayTitle;
+        window.getWorkCharacters = getWorkCharacters;
         window.getDisplayDate = getDisplayDate;
         window.getThumbnailImage = getThumbnailImage;
     }

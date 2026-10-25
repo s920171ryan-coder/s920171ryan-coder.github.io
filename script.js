@@ -666,15 +666,10 @@ function getFilterOptionList(
 
     if (filter === "character") {
 
+        // 合照中的每位角色各自成為一個分類項目。
+        // 同一張合照只會在該分類出現一次。
         const characters = [
-            ...new Set(
-                publicWorks.map(
-                    function(work) {
-
-                        return work.character;
-                    }
-                )
-            )
+            ...new Set(publicWorks.flatMap(getWorkCharacters))
         ];
 
 
@@ -685,10 +680,7 @@ function getFilterOptionList(
                     publicWorks.filter(
                         function(work) {
 
-                            return (
-                                work.character ===
-                                character
-                            );
+                            return getWorkCharacters(work).includes(character);
                         }
                     );
 

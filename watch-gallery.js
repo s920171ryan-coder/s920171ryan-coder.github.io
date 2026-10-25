@@ -1,5 +1,6 @@
-// 白針的收藏冊｜自動匯入 v4
-// 角色 -繪師 リクエストYYMMDD[-差分序號].jpg/png/webp/tif
+// 白針的收藏冊｜自動匯入 v5
+// 角色A＋角色B -繪師 リクエストYYMMDD[-差分序號].jpg/png/webp/tif
+// 單人作品也維持原有格式，不需要使用「＋」。
 // 以「角色＋繪師＋完稿日」比對舊作品；唯一匹配時，只更新 id / image。
 // 匯入資訊與 SHA256 不放 works.js，另存 data/import-history.json。
 // 只有所有必要檔案與作品頁成功完成後才刪除「匯入原圖」的副本。
@@ -28,6 +29,16 @@ const log=s=>console.log(`[${new Date().toLocaleTimeString('zh-TW',{hour12:false
 const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
 const hashFile=f=>sha(fs.readFileSync(f));
 const norm=s=>String(s||'').normalize('NFKC').replace(/\s+/gu,'').toLocaleLowerCase();
+// 可兼容原本字串角色，以及新匯入的多角色陣列。
+function charactersOf(value){
+ const names=Array.isArray(value)?value:[value];
+ return names.flatMap(name=>String(name||'').split(/[＋+]/u)).map(name=>name.trim()).filter(Boolean);
+}
+// 比對合照時不依角色排列順序；避免 A＋B 與 B＋A 被當成不同組合。
+function characterKey(value){
+ return JSON.stringify([...new Set(charactersOf(value).map(norm))].sort());
+}
+function characterLabel(value){return charactersOf(value).join('＋');}
 function readFresh(f){delete require.cache[require.resolve(f)];return require(f);}
 function writeSafe(file,source){
  if(file.endsWith('.js'))new vm.Script(source,{filename:file});
@@ -55,7 +66,11 @@ function parseFilename(filename){
  if(d.getUTCFullYear()!==year||d.getUTCMonth()!==month-1||d.getUTCDate()!==day)return null;
  const variantNumber=m[4]===undefined?null:Number(m[4]);
  if(variantNumber!==null&&(!Number.isSafeInteger(variantNumber)||variantNumber<1))return null;
- return {character:m[1].trim(),artistName:m[2].trim(),date:`${year}-${m[3].slice(2,4)}-${m[3].slice(4,6)}`,variantNumber};
+ // 單人為字串；「角色A＋角色B」存成陣列，兩者都能由網站讀取。
+ const names=m[1].trim().split(/[＋+]/u).map(name=>name.trim());
+ if(names.some(name=>!name)||new Set(names.map(norm)).size!==names.length)return null;
+ const character=names.length===1?names[0]:names;
+ return {character,artistName:m[2].trim(),date:`${year}-${m[3].slice(2,4)}-${m[3].slice(4,6)}`,variantNumber};
 }
 function findArtist(artists,name){
  const n=norm(name), ids=Object.keys(artists);
@@ -104,12 +119,12 @@ function addWork(source,w){
  const block='    {\n'+fields.map(k=>`        ${k}: ${JSON.stringify(w[k])}`).join(',\n')+'\n    }';
  return body+(body.endsWith(',')?'':',')+'\n\n'+block+source.slice(idx);
 }
-function workMatches(w,p,artistId){return norm(w.character)===norm(p.character)&&w.artist===artistId&&w.date===p.date;}
+function workMatches(w,p,artistId){return characterKey(w.character)===characterKey(p.character)&&w.artist===artistId&&w.date===p.date;}
 function resolveMatch(works,p,artistId,history){
  const same=works.filter(w=>workMatches(w,p,artistId));
  if(same.length===0)return {work:null};
  // 已匯入的工作，由檔名與 manifest 指定唯一 ID（不依陣列順序猜）。
- const inGroup=history.files.filter(h=>norm(h.character)===norm(p.character)&&h.artist===artistId&&h.date===p.date);
+ const inGroup=history.files.filter(h=>characterKey(h.character)===characterKey(p.character)&&h.artist===artistId&&h.date===p.date);
  if(p.variantNumber!==null){
   const sameVariant=inGroup.filter(h=>h.variantNumber===p.variantNumber);
   if(sameVariant.length===1){
@@ -152,7 +167,7 @@ function valid(works,artists){
   if(!w.id||ids.has(w.id))errors.push('ID 重複：'+w.id);ids.add(w.id);
   if(w.image&&images.has(w.image))errors.push('圖片重複：'+w.image);images.add(w.image);
   if(w.published!==true)continue;
-  if(!String(w.title||'').trim()||!w.character||!artists[w.artist])errors.push('資料不足：'+w.id);
+  if(!String(w.title||'').trim()||charactersOf(w.character).length===0||!artists[w.artist])errors.push('資料不足：'+w.id);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(w.date||''))errors.push('日期格式：'+w.id);
   if(!w.image||!fs.existsSync(path.join(ROOT,w.image)))errors.push('缺少原圖：'+w.id);
  }
@@ -193,7 +208,7 @@ async function scan(){
     completed.push({source,stat,hash,filename});continue;
    }
    // 相同位元組的重複匯入可略過，但不可誤刪不同 -1/-2 差分。
-   const prior=history.files.find(h=>h.hash===hash&&norm(h.character)===norm(p.character)&&h.date===p.date&&h.variantNumber===p.variantNumber);
+   const prior=history.files.find(h=>h.hash===hash&&characterKey(h.character)===characterKey(p.character)&&h.date===p.date&&h.variantNumber===p.variantNumber);
    if(prior){
     const current=works.find(w=>w.id===prior.id),img=current?.image&&path.join(ROOT,current.image);
     if(img&&fs.existsSync(img)&&fs.existsSync(path.join(THUMBS,path.basename(img)))){
@@ -222,7 +237,7 @@ async function scan(){
     log(`比對到舊作品，保留標題/手機位置/公開狀態，只更新 ID 和圖片：${resolved.work.id} → ${id}`);
    }else{
     worksSrc=addWork(worksSrc,{id,title:'',date:p.date,character:p.character,artist:artistId,published:false,image,mobilePosition:50});
-    log(`新作品草稿：${p.character}／${p.artistName}／${p.date} → ${id}`);
+    log(`新作品草稿：${characterLabel(p.character)}／${p.artistName}／${p.date} → ${id}`);
    }
    writeSafe(WORKS,worksSrc);works=readFresh(WORKS).works;
    history.files.push({filename,hash,id,date:p.date,character:p.character,artist:artistId,variantNumber:p.variantNumber,publishedOnce:!!resolved.work?.published});
@@ -266,7 +281,7 @@ async function scan(){
 for(const f of [WORKS,ARTISTS,GENERATOR])if(!fs.existsSync(f)){console.error('找不到：'+path.relative(ROOT,f));process.exit(1);}
 fs.mkdirSync(INBOX,{recursive:true});fs.mkdirSync(THUMBS,{recursive:true});
 const once=process.argv.includes('--once');
-log('自動匯入 v4：先比對舊作品，成功後才清除匯入副本。');
+log('自動匯入 v5：先比對舊作品，成功後才清除匯入副本。');
 if(!once){
  try{fs.watch(INBOX,()=>schedule(2500));fs.watch(path.dirname(WORKS),()=>schedule(1200));}
  catch(e){log('檔案監看不可用，改用定時掃描：'+e.message);}
