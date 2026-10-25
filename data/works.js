@@ -47,7 +47,7 @@ const works = [
 
     {
         id: "art-241018-ac0b80fdc",
-        title: "Halloween",
+        title: "Halloween 2024",
         date: "2024-10-18",
         character: "青凛Aori",
         artist: "nekoboshi-horo",
@@ -256,7 +256,7 @@ const works = [
 
     {
         id: "art-260906-b4afdb6df",
-        title: "おはよう",
+        title: "小歇",
         date: "2026-09-06",
         character: "くまのにい",
         artist: "minase-nami",
